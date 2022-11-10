@@ -22,30 +22,30 @@ int main()
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
     setlocale(LC_ALL, "Russian");
-    vector<Clothes> Clothesvector = clothesFromFile();
-    vector<Client>Clientvector = userFromFile();
+    vector<Clothes> ClothesVector = clothesFromFile();
+    vector<Client>ClientVector = userFromFile();
     int key;
-    int access = entry(Clientvector);
+    int access = entry(ClientVector);
     if (access == 9) {
-        Exit(Clothesvector, Clientvector);
+        Exit(ClothesVector, ClientVector);
     }
     while (true) {
         if (access == 1) {
-            Admin admin(Clothesvector);
+            Admin admin(ClothesVector);
             admin.startInteraction();
-            access = entry(Clientvector);
+            access = entry(ClientVector);
             if (access == 9) {
-                Exit(Clothesvector, Clientvector);
+                Exit(ClothesVector, ClientVector);
             }
         }
         else if (access == 2) {
-            Client client(Clothesvector);
+            Client client(ClothesVector);
             client.startInteraction();
-            access = entry(Clientvector);
+            access = entry(ClientVector);
             if (access == 9) {
-                Exit(Clothesvector, Clientvector);
+                Exit(ClothesVector, ClientVector);
             }
-        }//user
+        }
         else if (access == 3) {
             cout << "Введите: ";
             int regChoice = input();
@@ -57,7 +57,7 @@ int main()
                 cout << "----- Регистрация -----" << endl;
                 cout << "Введите логин: ";
                 cin >> login;
-                flag = checkUniq(login, Clientvector);
+                flag = checkUniq(login, ClientVector);
                 /*if (flag == false)
                 {
                     cout << "Введите пароль: ";
@@ -74,20 +74,20 @@ int main()
                     cin >> pass;
                     flag = NEW();
                     if (flag == false) break;
-                    Client c(login, pass,Clothesvector);
-                    Clientvector.push_back(c);
+                    Client c(login, pass,ClothesVector);
+                    ClientVector.push_back(c);
                     c.startInteraction();
-                    access = entry(Clientvector);
+                    access = entry(ClientVector);
                     if (access == 9) {
-                        Exit(Clothesvector, Clientvector);
+                        Exit(ClothesVector, ClientVector);
                     }
                 }
                 else cout << "Пользователь под логином \"" << login << "\" уже есть!" << endl;
             }
             else if (regChoice == 2) {
-                access = entry(Clientvector);
+                access = entry(ClientVector);
                 if (access == 9) {
-                    Exit(Clothesvector, Clientvector);
+                    Exit(ClothesVector, ClientVector);
                 }
             }
         }
@@ -119,7 +119,6 @@ int entry(vector<Client> Clientvector) {
 int authentication(string login, string password, vector<Client>ClientVector) {
     ifstream file("admin.txt");
     string alog, apass;
-    //vector<Client> ClientVector = userFromFile();
     if (file.is_open()) {
         getline(file, alog);
         getline(file, apass);

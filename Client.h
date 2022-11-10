@@ -9,7 +9,7 @@
 
 class User {
 protected:
-	vector<Clothes> ClothesList;
+	vector<Clothes> ClothesVector;
 	void showClothes(vector<Clothes>);
 	virtual void startInteraction()=0;
 };

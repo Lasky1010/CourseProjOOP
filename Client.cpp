@@ -7,8 +7,8 @@
 #include <fstream>
 #include"Client.h"
 
-bool checkUniq(std::string log, std::vector<Client> Clientvector) {
-	for (auto iter : Clientvector) {
+bool checkUniq(std::string log, std::vector<Client> ClientVector) {
+	for (auto iter : ClientVector) {
 		if (iter.getLogin() == log) {
 			return true;
 		}
@@ -52,9 +52,9 @@ void saveUsers(vector<Client> Clients) {
 	of.close();
 }
 
-Client::Client(string log, string pass, vector<Clothes>CL) :login(log), password(pass) { ClothesList = CL; }
-Client::Client(vector<Clothes>ClothesList) {
-	this->ClothesList = ClothesList;
+Client::Client(string log, string pass, vector<Clothes>CL) :login(log), password(pass) { ClothesVector = CL; }
+Client::Client(vector<Clothes>ClothesVector) {
+	this->ClothesVector = ClothesVector;
 }
 Client::Client() {
 	login = "";
@@ -93,18 +93,18 @@ istream& operator>> (istream& is, Client& c) {
 	return is >> c.login >> c.password;
 }
 
-void User::showClothes(vector<Clothes> ClothesList) {
-	for (int i = 0; i < ClothesList.size(); i++) {
-		cout << ClothesList[i] << endl;
+void User::showClothes(vector<Clothes> ClothesVector) {
+	for (int i = 0; i < ClothesVector.size(); i++) {
+		cout << ClothesVector[i] << endl;
 	}
 }
 string Admin::getPass() { return AdminPass; }
 string Admin::getLog() { return AdminLog; }
-Admin::Admin(vector<Clothes>ClothesList) {
-	this->ClothesList = ClothesList;
+Admin::Admin(vector<Clothes>ClothesVector) {
+	this->ClothesVector = ClothesVector;
 }
-void Admin::setList(vector<Clothes> ClothesList) {
-	this->ClothesList = ClothesList;
+void Admin::setList(vector<Clothes> ClothesVector) {
+	this->ClothesVector = ClothesVector;
 }
 bool Admin::isDataCorrect(string login, string pass) {
 	if (this->AdminLog == login && this->AdminPass == pass) {
@@ -138,7 +138,7 @@ void Admin::startInteraction() {
 			addClothes();
 		}
 		else if (key == 2) {
-			showClothes(ClothesList);
+			showClothes(ClothesVector);
 		}
 		else if (key == 3) {
 			int choice;
@@ -151,11 +151,11 @@ void Admin::startInteraction() {
 			} while (choice > 4 && choice != 9);
 			vector <CL> lower;
 
-			for (int i = 0; i < ClothesList.size(); i++) {
+			for (int i = 0; i < ClothesVector.size(); i++) {
 				CL cl;
-				cl.BRAND = ClothesList[i].getBrand();
-				cl.TYPE = ClothesList[i].getType();
-				cl.COLOR = ClothesList[i].getColor();
+				cl.BRAND = ClothesVector[i].getBrand();
+				cl.TYPE = ClothesVector[i].getType();
+				cl.COLOR = ClothesVector[i].getColor();
 				lower.push_back(cl);
 			}
 
@@ -167,10 +167,10 @@ void Admin::startInteraction() {
 				bool find = false;
 				getline(cin, brand);
 				for (char& c : brand) c = to_lowercase(c);
-				for (int i = 0; i < ClothesList.size(); i++) {
-					if (ClothesList[i].getBrand() == brand || lower[i].BRAND == brand) {
+				for (int i = 0; i < ClothesVector.size(); i++) {
+					if (ClothesVector[i].getBrand() == brand || lower[i].BRAND == brand) {
 						find = true;
-						cout << ClothesList[i];
+						cout << ClothesVector[i];
 					}
 				}
 				if (find == false) {
@@ -184,10 +184,10 @@ void Admin::startInteraction() {
 				bool find = false;
 				getline(cin, type);
 				for (char& c : type) c = to_lowercase(c);
-				for (int i = 0; i < ClothesList.size(); i++) {
-					if (ClothesList[i].getBrand() == type || lower[i].TYPE == type) {
+				for (int i = 0; i < ClothesVector.size(); i++) {
+					if (ClothesVector[i].getBrand() == type || lower[i].TYPE == type) {
 						find = true;
-						cout << ClothesList[i];
+						cout << ClothesVector[i];
 					}
 				}
 
@@ -202,10 +202,10 @@ void Admin::startInteraction() {
 				bool find = false;
 				getline(cin, color);
 				for (char& c : color) c = to_lowercase(c);
-				for (int i = 0; i < ClothesList.size(); i++) {
-					if (ClothesList[i].getColor() == color || lower[i].COLOR == color) {
+				for (int i = 0; i < ClothesVector.size(); i++) {
+					if (ClothesVector[i].getColor() == color || lower[i].COLOR == color) {
 						find = true;
-						cout << ClothesList[i];
+						cout << ClothesVector[i];
 					}
 				}
 				if (find == false) {
@@ -223,10 +223,10 @@ void Admin::startInteraction() {
 				else if (ch == 2) { art = "Ж"; }
 				else if (ch == 3) { art = "Д"; }
 				bool find = false;
-				for (int i = 0; i < ClothesList.size(); i++) {
-					if (ClothesList[i].getArt() == art) {
+				for (int i = 0; i < ClothesVector.size(); i++) {
+					if (ClothesVector[i].getArt() == art) {
 						find = true;
-						cout << ClothesList[i];
+						cout << ClothesVector[i];
 					}
 				}
 				if (find == false) {
@@ -239,9 +239,9 @@ void Admin::startInteraction() {
 				bool find = false;
 				int size = input();
 				cin.ignore();
-				for (int i = 0; i < ClothesList.size(); i++)
-					if (ClothesList[i].getSize() == size) {
-						cout << ClothesList[i];
+				for (int i = 0; i < ClothesVector.size(); i++)
+					if (ClothesVector[i].getSize() == size) {
+						cout << ClothesVector[i];
 						find = true;
 					}
 				if (find == false) {
@@ -280,7 +280,7 @@ void Admin::startInteraction() {
 			}
 		}*/
 		/*else if (key == 6) {
-			ClothesList.sort(SortClothes());
+			ClothesVector.sort(SortClothes());
 			cout << "Список отсортирован\n";
 		}*/
 		else if (key == 7) {
@@ -321,7 +321,7 @@ void Admin::addClothes() {
 		cout << "Размер: "; size = input();
 		cout << "Цена: "; price = dinput();
 		Clothes newClothes(type, brand, art, size, color, price);
-		ClothesList.push_back(newClothes);
+		ClothesVector.push_back(newClothes);
 		cout << endl;
 	}
 
@@ -329,7 +329,7 @@ void Admin::addClothes() {
 
 
 bool Admin::isID(int id) {
-	for (auto iter:ClothesList) {
+	for (auto iter:ClothesVector) {
 		if (iter.getID() == id) {
 			return true;
 		}

@@ -12,9 +12,9 @@
 using namespace std;
 bool isValidName();
 
-void saveClothes(vector<Clothes> Clothesvector) {
+void saveClothes(vector<Clothes> ClothesVector) {
 	ofstream of("Clothes.txt");
-	for (auto iter :Clothesvector) {
+	for (auto iter :ClothesVector) {
 		
 		of << "№" << iter.getID() << " " << iter.getType() << " " << iter.getBrand() <<
 			" " << iter.getArt() << " " <<iter.getSize() << " "
@@ -23,7 +23,7 @@ void saveClothes(vector<Clothes> Clothesvector) {
 	of.close();
 }
 vector<Clothes> clothesFromFile() {
-	vector<Clothes> Clothesvector;
+	vector<Clothes> ClothesVector;
 	Clothes c;
 	ifstream in("Clothes.txt");
 	if (in.is_open())
@@ -32,13 +32,13 @@ vector<Clothes> clothesFromFile() {
 		{
 			cout << "Файл пуст!" << endl;
 			in.close();
-			return Clothesvector;
+			return ClothesVector;
 		}
 		int i = 1;
 		while (!in.eof())
 		{
 			in >> c;
-			Clothesvector.push_back(c);
+			ClothesVector.push_back(c);
 		}
 	}
 	else
@@ -46,7 +46,7 @@ vector<Clothes> clothesFromFile() {
 		cout << "Ошибка при открытии файла для чтения!" << endl;
 	}
 	in.close();
-	return Clothesvector;
+	return ClothesVector;
 }
 
 int Clothes::createID() {
