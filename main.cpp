@@ -8,14 +8,15 @@
 #include "Client.h"
 #include"validation.h"
 using namespace std;
+
 void Exit(vector<Clothes> , vector<Client> );
 int input();
 
-//int ClothesClass::key;
 
 int entry(vector<Client>);
 int authentication(string, string,vector<Client>);
 bool isValidName(string);
+
 int main()
 {
     SetConsoleCP(1251);
@@ -24,12 +25,11 @@ int main()
     vector<Clothes> Clothesvector = clothesFromFile();
     vector<Client>Clientvector = userFromFile();
     int key;
-    bool menu = true;
     int access = entry(Clientvector);
     if (access == 9) {
         Exit(Clothesvector, Clientvector);
     }
-    while (menu) {
+    while (true) {
         if (access == 1) {
             Admin admin(Clothesvector);
             admin.startInteraction();
