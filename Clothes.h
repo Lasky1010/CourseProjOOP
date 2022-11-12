@@ -19,14 +19,17 @@ double dinput();
 
 class Clothes {
 protected:
-	int id, size;
+	int id, size,count;
 	string art, brand, color, type;
 	double price;
 
 	int createID();
 public:
-	Clothes(string , string , string , int , string , double);
+	Clothes(string , string , string , int , string , double,int);
+	Clothes(int,string, string, string, int, string, double, int);
 	Clothes();
+	void setCount(int);
+	int getCount();
 	void setType(string );
 	string getType();
 	void setID(int );

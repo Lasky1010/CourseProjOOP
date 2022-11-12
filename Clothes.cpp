@@ -16,15 +16,15 @@ void saveClothes(vector<Clothes> ClothesVector) {
 	ofstream of("Clothes.txt");
 	for (auto iter :ClothesVector) {
 		
-		of << "№" << iter.getID() << " " << iter.getType() << " " << iter.getBrand() <<
-			" " << iter.getArt() << " " <<iter.getSize() << " "
-			<< iter.getColor() << " " << iter.getPrice();
+		of << iter.getID() << "\n" << iter.getType() << "\n" << iter.getBrand() <<
+			"\n" << iter.getArt() << "\n" <<iter.getSize() << "\n"
+			<< iter.getColor() << "\n" << iter.getPrice()<<"\n"<<iter.getCount();
 	}
+	of << endl;
 	of.close();
 }
 vector<Clothes> clothesFromFile() {
 	vector<Clothes> ClothesVector;
-	Clothes c;
 	ifstream in("Clothes.txt");
 	if (in.is_open())
 	{
@@ -35,9 +35,20 @@ vector<Clothes> clothesFromFile() {
 			return ClothesVector;
 		}
 		int i = 1;
-		while (!in.eof())
-		{
-			in >> c;
+		int id,count, size;
+		string art, type, brand,color;
+		double price;
+		while (true) {
+			in >> id;
+			if (in.eof()) break;
+			in >> type;
+			in >> brand;
+			in >> art;
+			in >> size;
+			in >> color;
+			in >> price;
+			in >> count;
+			Clothes c(id,type,brand,art,size,color,price,count);
 			ClothesVector.push_back(c);
 		}
 	}
@@ -48,6 +59,7 @@ vector<Clothes> clothesFromFile() {
 	in.close();
 	return ClothesVector;
 }
+Clothes::Clothes(int id, string type, string brand, string art, int size, string color, double price, int count):id(id), type(type), brand(brand), art(art), size(size), color(color), price(price), count(count) {}
 
 int Clothes::createID() {
 	srand(unsigned(time(0)));
@@ -57,9 +69,14 @@ int Clothes::createID() {
 	int createdID = stoi(stringID);
 	return createdID;
 }
+void Clothes::setCount(int count) {
+	this->count = count;
+}
+int Clothes::getCount() {
+	return this->count;
+}
 
-
-Clothes::Clothes(string type, string brand, string art, int size, string color, double price) :type(type), brand(brand), art(art), size(size), color(color), price(price) { this->id = createID(); }
+Clothes::Clothes(string type, string brand, string art, int size, string color, double price,int count) :type(type), brand(brand), art(art), size(size), color(color), price(price) ,count(count) { this->id = createID(); }
 Clothes :: Clothes(){
 	id = 0;
 	size = 0;
@@ -68,6 +85,7 @@ Clothes :: Clothes(){
 	brand = "";
 	color = "";
 	art = "";
+	count = 0;
 }
 
 void Clothes::setType(string type) {
@@ -111,21 +129,6 @@ void Clothes::setArt(string Art) {
 }
 string Clothes::getArt() {
 	return art;
-}
-
-
-ostream& operator << (ostream& os, Clothes& C)
-{
-	return os << "№" << C.id << "\n" << C.type << "\n" << C.brand <<
-		"\n" << C.art << "\n" << C.size << "\n"
-		<< C.color << "\n" << C.price << "$";
-}
-
-istream& operator >> (istream& is, Clothes& C)
-{
-	return is >> C.id >> C.type >> C.brand >>
-		C.art >> C.size >>
-		C.color >> C.price;
 }
 
 char to_lowercase(char c)
@@ -191,4 +194,20 @@ bool isValidName(string name) {
 		}
 	}
 	return isa;
+}
+
+
+// Перегрузки
+ostream& operator << (ostream& os, Clothes& C)
+{
+	return os << C.id << "\n" << C.type << "\n" << C.brand <<
+		"\n" << C.art << "\n" << C.size << "\n"
+		<< C.color << "\n" << C.price << "$\n" << C.count << "шт";
+}
+
+istream& operator >> (istream& is, Clothes& C)
+{
+	return is >> C.id >> C.type >> C.brand >>
+		C.art >> C.size >>
+		C.color >> C.price>>C.count;
 }

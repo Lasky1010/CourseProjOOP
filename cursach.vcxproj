@@ -137,6 +137,9 @@
     <ClInclude Include="Clothes.h" />
     <ClInclude Include="validation.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Clothes.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

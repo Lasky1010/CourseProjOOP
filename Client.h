@@ -11,7 +11,8 @@ class User {
 protected:
 	vector<Clothes> ClothesVector;
 	void showClothes(vector<Clothes>);
-	virtual void startInteraction()=0;
+	virtual vector <Clothes>startInteraction()=0;
+	
 };
 
 
@@ -24,7 +25,7 @@ public:
 	Client(vector<Clothes>);
 	string getLogin();
 	string getPass();
-	void startInteraction();
+	vector <Clothes> startInteraction();
 	friend ostream& operator<< (ostream& , Client&);
 	friend istream& operator>> (istream& , Client&);
 };
@@ -38,7 +39,8 @@ public:
 	Admin(vector<Clothes>);
 	void setList(vector<Clothes> );
 	bool isDataCorrect(string , string );
-	void startInteraction();
+	//void startInteraction();
+	vector <Clothes>startInteraction();
 private:
 	int checkInput(bool& , string );
 

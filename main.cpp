@@ -32,7 +32,7 @@ int main()
     while (true) {
         if (access == 1) {
             Admin admin(ClothesVector);
-            admin.startInteraction();
+            ClothesVector=admin.startInteraction();
             access = entry(ClientVector);
             if (access == 9) {
                 Exit(ClothesVector, ClientVector);
@@ -40,7 +40,7 @@ int main()
         }
         else if (access == 2) {
             Client client(ClothesVector);
-            client.startInteraction();
+            ClothesVector=client.startInteraction();
             access = entry(ClientVector);
             if (access == 9) {
                 Exit(ClothesVector, ClientVector);
@@ -58,16 +58,6 @@ int main()
                 cout << "¬ведите логин: ";
                 cin >> login;
                 flag = checkUniq(login, ClientVector);
-                /*if (flag == false)
-                {
-                    cout << "¬ведите пароль: ";
-                    cin >> pass;
-                    flag = NEW();
-                    if (flag == false) break;
-                    Client c(login, pass);
-                    Clientvector.push_back(c);
-                    access = entry(Clothesvector, Clientvector);
-                }*/
                 if (flag == false)
                 {
                     cout << "¬ведите пароль: ";
@@ -76,7 +66,7 @@ int main()
                     if (flag == false) break;
                     Client c(login, pass,ClothesVector);
                     ClientVector.push_back(c);
-                    c.startInteraction();
+                    ClothesVector=c.startInteraction();
                     access = entry(ClientVector);
                     if (access == 9) {
                         Exit(ClothesVector, ClientVector);

@@ -51,7 +51,6 @@ void saveUsers(vector<Client> Clients) {
 	}
 	of.close();
 }
-
 Client::Client(string log, string pass, vector<Clothes>CL) :login(log), password(pass) { ClothesVector = CL; }
 Client::Client(vector<Clothes>ClothesVector) {
 	this->ClothesVector = ClothesVector;
@@ -63,14 +62,14 @@ Client::Client() {
 string Client::getLogin() { return login; }
 string Client::getPass() { return password; }
 
-void Client::startInteraction() {
+vector<Clothes> Client::startInteraction() {
 	int key;
 	while (true) {
 		cout << "\n1.Просмотр всего ассортиментаn\n2. По определенному фильтру\n0. Назад\n";
 		key = input();
 
 		if (key == 0) {
-			return;
+			return ClothesVector;
 		}
 
 		else if (key == 1) {
@@ -85,19 +84,8 @@ void Client::startInteraction() {
 }
 
 
-ostream& operator << (ostream& os, Client& c)
-{
-	return os << c.login << " " << c.password<<endl;
-}
-istream& operator>> (istream& is, Client& c) {
-	return is >> c.login >> c.password;
-}
 
-void User::showClothes(vector<Clothes> ClothesVector) {
-	for (int i = 0; i < ClothesVector.size(); i++) {
-		cout << ClothesVector[i] << endl;
-	}
-}
+
 string Admin::getPass() { return AdminPass; }
 string Admin::getLog() { return AdminLog; }
 Admin::Admin(vector<Clothes>ClothesVector) {
@@ -112,7 +100,8 @@ bool Admin::isDataCorrect(string login, string pass) {
 	}
 	return false;
 }
-void Admin::startInteraction() {
+
+vector<Clothes> Admin::startInteraction() {
 	int key;
 	bool $input;
 	string $inputID;
@@ -127,12 +116,13 @@ void Admin::startInteraction() {
 			cout << "\n--------------------------------------";
 			cout<<"\n->";
 			key = input();
-			if (key > 7 || key < 0) {
+			system("cls");
+			if (key > 7 ) {
 				cout << "Такого пункта меню нет\n";
 			}
-		} while (key > 7 || key < 0);
+		} while (key > 7 );
 		if (key == 0) {
-			return;
+			return ClothesVector;
 		}
 		else if (key == 1) {
 			addClothes();
@@ -143,14 +133,15 @@ void Admin::startInteraction() {
 		else if (key == 3) {
 			int choice;
 			do {
-				cout << "Искать:\n1 - По бренду\n2 - По типу\n3 - По цвету\n4 - По артикулу\n5 - По размеру\n9 - Назад\n";
+				cout << "Искать:\n1 - По бренду\n2 - По типу\n3 - По цвету\n4 - По артикулу\n5 - По размеру\n0 - Назад\n";
 				choice = input();
 				cin.ignore();
 				system("cls");
-				if (choice > 4 && choice != 9) { cout << "Неверный выбор\n"; }
-			} while (choice > 4 && choice != 9);
+				if (choice > 5 ) {
+					cout << "Такого пункта меню нет\n"; 
+				}
+			} while (choice > 5);
 			vector <CL> lower;
-
 			for (int i = 0; i < ClothesVector.size(); i++) {
 				CL cl;
 				cl.BRAND = ClothesVector[i].getBrand();
@@ -158,7 +149,6 @@ void Admin::startInteraction() {
 				cl.COLOR = ClothesVector[i].getColor();
 				lower.push_back(cl);
 			}
-
 			to_lower(lower);
 			if (choice == 9) { lower.clear(); break; }
 			else if (choice == 1) {
@@ -170,7 +160,10 @@ void Admin::startInteraction() {
 				for (int i = 0; i < ClothesVector.size(); i++) {
 					if (ClothesVector[i].getBrand() == brand || lower[i].BRAND == brand) {
 						find = true;
-						cout << ClothesVector[i];
+						cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+							"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+							<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+							"\n---------------------\n";
 					}
 				}
 				if (find == false) {
@@ -187,7 +180,10 @@ void Admin::startInteraction() {
 				for (int i = 0; i < ClothesVector.size(); i++) {
 					if (ClothesVector[i].getBrand() == type || lower[i].TYPE == type) {
 						find = true;
-						cout << ClothesVector[i];
+						cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+							"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+							<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+							"\n---------------------\n";
 					}
 				}
 
@@ -198,14 +194,16 @@ void Admin::startInteraction() {
 			else if (choice == 3) {
 				string color;
 				cout << "Введите цвет: ";
-				cin.ignore();
 				bool find = false;
 				getline(cin, color);
 				for (char& c : color) c = to_lowercase(c);
 				for (int i = 0; i < ClothesVector.size(); i++) {
 					if (ClothesVector[i].getColor() == color || lower[i].COLOR == color) {
 						find = true;
-						cout << ClothesVector[i];
+						cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+							"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+							<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+							"\n---------------------\n";
 					}
 				}
 				if (find == false) {
@@ -214,7 +212,7 @@ void Admin::startInteraction() {
 
 			}
 			else if (choice == 4) {
-				cout << "1. М\n2. Ж\n3. Д\n0. Назад";
+				cout << "1.Мужская\n2.Женская\n3.Детская\n0. Назад";
 				int ch = input();
 				cin.ignore();
 				string art = "";
@@ -223,12 +221,14 @@ void Admin::startInteraction() {
 				else if (ch == 2) { art = "Ж"; }
 				else if (ch == 3) { art = "Д"; }
 				bool find = false;
-				for (int i = 0; i < ClothesVector.size(); i++) {
-					if (ClothesVector[i].getArt() == art) {
+				for (auto iter : ClothesVector)
+					if (iter.getArt() == art) {
+						cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
+							"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+							<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
+							"\n---------------------\n";
 						find = true;
-						cout << ClothesVector[i];
 					}
-				}
 				if (find == false) {
 					cout << "Не найдено\n";
 				}
@@ -239,9 +239,12 @@ void Admin::startInteraction() {
 				bool find = false;
 				int size = input();
 				cin.ignore();
-				for (int i = 0; i < ClothesVector.size(); i++)
-					if (ClothesVector[i].getSize() == size) {
-						cout << ClothesVector[i];
+				for (auto iter:ClothesVector)
+					if (iter.getSize() == size) {
+						cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
+							"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+							<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
+							"\n---------------------\n";
 						find = true;
 					}
 				if (find == false) {
@@ -301,7 +304,14 @@ int Admin::checkInput(bool& isInputCorrect, string response) {
 		cout << "Неправильный ввод!\n";
 	}
 }
-
+void User::showClothes(vector<Clothes> ClothesVector) {
+	for (auto iter:ClothesVector) {
+		cout << "№" << iter.getID() <<"\nТип: "<<iter.getType() << "\nБренд: " << iter.getBrand() <<
+			"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+			<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount()<<
+			"\n---------------------\n";
+	}
+}
 
 void Admin::addClothes() {
 	int n;
@@ -309,7 +319,7 @@ void Admin::addClothes() {
 	cin >> n;
 	cin.ignore();
 	string art, brand, color, type;
-	int size;
+	int size,count;
 	double price;
 	cout << endl;
 	for (int i = 0; i < n; i++) {
@@ -320,7 +330,9 @@ void Admin::addClothes() {
 		cout << "Артикул: "; getline(cin, art);
 		cout << "Размер: "; size = input();
 		cout << "Цена: "; price = dinput();
-		Clothes newClothes(type, brand, art, size, color, price);
+		cout << "Количество: "; count = input();
+		cin.ignore();
+		Clothes newClothes(type, brand, art, size, color, price,count);
 		ClothesVector.push_back(newClothes);
 		cout << endl;
 	}
@@ -369,4 +381,11 @@ void Admin::editLogPass() {
 	}
 }
 
-
+// Перегрзки
+ostream& operator << (ostream& os, Client& c)
+{
+	return os << c.login << " " << c.password << endl;
+}
+istream& operator>> (istream& is, Client& c) {
+	return is >> c.login >> c.password;
+}
