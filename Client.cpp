@@ -128,144 +128,24 @@ vector<Clothes> Admin::startInteraction() {
 			addClothes();
 		}
 		else if (key == 2) {
-			showClothes(ClothesVector);
+			if (!checkEmpty(ClothesVector)) {
+				showClothes(ClothesVector);
+			}
 		}
 		else if (key == 3) {
-			int choice;
-			do {
-				cout << "Искать:\n1 - По бренду\n2 - По типу\n3 - По цвету\n4 - По артикулу\n5 - По размеру\n0 - Назад\n";
-				choice = input();
-				cin.ignore();
-				system("cls");
-				if (choice > 5 ) {
-					cout << "Такого пункта меню нет\n"; 
-				}
-			} while (choice > 5);
-			vector <CL> lower;
-			for (int i = 0; i < ClothesVector.size(); i++) {
-				CL cl;
-				cl.BRAND = ClothesVector[i].getBrand();
-				cl.TYPE = ClothesVector[i].getType();
-				cl.COLOR = ClothesVector[i].getColor();
-				lower.push_back(cl);
+			if (!checkEmpty(ClothesVector)) {
+				findClothes(ClothesVector);
 			}
-			to_lower(lower);
-			if (choice == 9) { lower.clear(); break; }
-			else if (choice == 1) {
-				cout << "Введите бренд: ";
-				string brand;
-				bool find = false;
-				getline(cin, brand);
-				for (char& c : brand) c = to_lowercase(c);
-				for (int i = 0; i < ClothesVector.size(); i++) {
-					if (ClothesVector[i].getBrand() == brand || lower[i].BRAND == brand) {
-						find = true;
-						cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-							"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-							<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-							"\n---------------------\n";
-					}
-				}
-				if (find == false) {
-					cout << "Не найдено\n";
-				}
-			}
-			else if (choice == 2) {
-				cout << "Введите тип: ";
-				cin.ignore();
-				string type;
-				bool find = false;
-				getline(cin, type);
-				for (char& c : type) c = to_lowercase(c);
-				for (int i = 0; i < ClothesVector.size(); i++) {
-					if (ClothesVector[i].getBrand() == type || lower[i].TYPE == type) {
-						find = true;
-						cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-							"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-							<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-							"\n---------------------\n";
-					}
-				}
-
-				if (find == false) {
-					cout << "Не найдено\n";
-				}
-			}
-			else if (choice == 3) {
-				string color;
-				cout << "Введите цвет: ";
-				bool find = false;
-				getline(cin, color);
-				for (char& c : color) c = to_lowercase(c);
-				for (int i = 0; i < ClothesVector.size(); i++) {
-					if (ClothesVector[i].getColor() == color || lower[i].COLOR == color) {
-						find = true;
-						cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-							"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-							<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-							"\n---------------------\n";
-					}
-				}
-				if (find == false) {
-					cout << "Не найдено\n";
-				}
-
-			}
-			else if (choice == 4) {
-				cout << "1.Мужская\n2.Женская\n3.Детская\n0. Назад";
-				int ch = input();
-				cin.ignore();
-				string art = "";
-				if (ch == 0) { break; }
-				else if (ch == 1) { art = "М"; }
-				else if (ch == 2) { art = "Ж"; }
-				else if (ch == 3) { art = "Д"; }
-				bool find = false;
-				for (auto iter : ClothesVector)
-					if (iter.getArt() == art) {
-						cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-							"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-							<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-							"\n---------------------\n";
-						find = true;
-					}
-				if (find == false) {
-					cout << "Не найдено\n";
-				}
-
-			}
-			else if (choice == 5) {
-				cout << "Введите размер: ";
-				bool find = false;
-				int size = input();
-				cin.ignore();
-				for (auto iter:ClothesVector)
-					if (iter.getSize() == size) {
-						cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-							"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-							<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-							"\n---------------------\n";
-						find = true;
-					}
-				if (find == false) {
-					cout << "Не найдено\n";
-				}
-			}
-
 		}
 		else if (key == 5) {
-			cout << "Введите id вещи\n";
-			cin >> $inputID;
-			cin.ignore();
-			$input = true;
-			int id = checkInput($input, $inputID);
-			if ($input) {
-				if (isID(id)) {
-					//deleteClothes(id);
-				}
-				else {
-					cout << "Вещь не найдена\n";
-				}
+			if (!checkEmpty(ClothesVector)) {
+				showClothes(ClothesVector);
+				deleteClothes(ClothesVector);
+			}
+		}
+		else if (key == 6) {
+			if (!checkEmpty(ClothesVector)) {
+
 			}
 		}
 		/*else if (key == 4) {
@@ -305,6 +185,7 @@ int Admin::checkInput(bool& isInputCorrect, string response) {
 	}
 }
 void User::showClothes(vector<Clothes> ClothesVector) {
+
 	for (auto iter:ClothesVector) {
 		cout << "№" << iter.getID() <<"\nТип: "<<iter.getType() << "\nБренд: " << iter.getBrand() <<
 			"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
@@ -312,7 +193,127 @@ void User::showClothes(vector<Clothes> ClothesVector) {
 			"\n---------------------\n";
 	}
 }
+void User::findClothes(vector<Clothes> ClothesVector) {
+	int choice;
+	do {
+		cout << "Искать:\n1 - По бренду\n2 - По типу\n3 - По цвету\n4 - По артикулу\n5 - По размеру\n0 - Назад\n";
+		choice = input();
+		cin.ignore();
+		system("cls");
+		if (choice > 5) {
+			cout << "Такого пункта меню нет\n";
+		}
+	} while (choice > 5);
+	vector <CL> lower;
+	for (int i = 0; i < ClothesVector.size(); i++) {
+		CL cl;
+		cl.BRAND = ClothesVector[i].getBrand();
+		cl.TYPE = ClothesVector[i].getType();
+		cl.COLOR = ClothesVector[i].getColor();
+		lower.push_back(cl);
+	}
+	to_lower(lower);
+	if (choice == 9) { lower.clear(); return; }
+	else if (choice == 1) {
+		cout << "Введите бренд: ";
+		string brand;
+		bool find = false;
+		getline(cin, brand);
+		for (char& c : brand) c = to_lowercase(c);
+		for (int i = 0; i < ClothesVector.size(); i++) {
+			if (ClothesVector[i].getBrand() == brand || lower[i].BRAND == brand) {
+				find = true;
+				cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+					"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+					<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+					"\n---------------------\n";
+			}
+		}
+		if (find == false) {
+			cout << "Не найдено\n";
+		}
+	}
+	else if (choice == 2) {
+		cout << "Введите тип: ";
+		cin.ignore();
+		string type;
+		bool find = false;
+		getline(cin, type);
+		for (char& c : type) c = to_lowercase(c);
+		for (int i = 0; i < ClothesVector.size(); i++) {
+			if (ClothesVector[i].getBrand() == type || lower[i].TYPE == type) {
+				find = true;
+				cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+					"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+					<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+					"\n---------------------\n";
+			}
+		}
 
+		if (find == false) {
+			cout << "Не найдено\n";
+		}
+	}
+	else if (choice == 3) {
+		string color;
+		cout << "Введите цвет: ";
+		bool find = false;
+		getline(cin, color);
+		for (char& c : color) c = to_lowercase(c);
+		for (int i = 0; i < ClothesVector.size(); i++) {
+			if (ClothesVector[i].getColor() == color || lower[i].COLOR == color) {
+				find = true;
+				cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+					"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+					<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+					"\n---------------------\n";
+			}
+		}
+		if (find == false) {
+			cout << "Не найдено\n";
+		}
+
+	}
+	else if (choice == 4) {
+		cout << "1.Мужская\n2.Женская\n3.Детская\n0. Назад";
+		int ch = input();
+		cin.ignore();
+		string art = "";
+		if (ch == 0) { return; }
+		else if (ch == 1) { art = "М"; }
+		else if (ch == 2) { art = "Ж"; }
+		else if (ch == 3) { art = "Д"; }
+		bool find = false;
+		for (auto iter : ClothesVector)
+			if (iter.getArt() == art) {
+				cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
+					"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+					<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
+					"\n---------------------\n";
+				find = true;
+			}
+		if (find == false) {
+			cout << "Не найдено\n";
+		}
+	}
+	else if (choice == 5) {
+		cout << "Введите размер: ";
+		bool find = false;
+		int size = input();
+		cin.ignore();
+		for (auto iter : ClothesVector)
+			if (iter.getSize() == size) {
+				cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
+					"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+					<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
+					"\n---------------------\n";
+				find = true;
+			}
+		if (find == false) {
+			cout << "Не найдено\n";
+		}
+	}
+}
 void Admin::addClothes() {
 	int n;
 	cout << "Сколько вещей хотите добавить: ";
@@ -338,7 +339,22 @@ void Admin::addClothes() {
 	}
 
 }
+void Admin::deleteClothes(vector<Clothes>&ClothesVector) {
+	cout << "\nВведите id вещи\n";
+	int inputID=input();
+	cin.ignore();
+	if (isID(inputID)) {
 
+		auto curr = find_if(ClothesVector.begin(), ClothesVector.end(), [inputID](Clothes& c) {
+			return c.getID() == inputID;
+			});
+		ClothesVector.erase(curr);
+	}
+	else {
+		cout << "Вещь не найдена\n";
+	}
+
+}
 
 bool Admin::isID(int id) {
 	for (auto iter:ClothesVector) {
@@ -388,4 +404,11 @@ ostream& operator << (ostream& os, Client& c)
 }
 istream& operator>> (istream& is, Client& c) {
 	return is >> c.login >> c.password;
+}
+bool User::checkEmpty(vector<Clothes> ClothesVector) {
+	if (ClothesVector.empty()) {
+		cout << "Список одежды пуст\n";
+		return true;
+	}
+	return false;
 }

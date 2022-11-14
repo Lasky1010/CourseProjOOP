@@ -11,8 +11,9 @@ class User {
 protected:
 	vector<Clothes> ClothesVector;
 	void showClothes(vector<Clothes>);
+	void findClothes(vector<Clothes>);
 	virtual vector <Clothes>startInteraction()=0;
-	
+	bool checkEmpty(vector<Clothes>);
 };
 
 
@@ -39,13 +40,12 @@ public:
 	Admin(vector<Clothes>);
 	void setList(vector<Clothes> );
 	bool isDataCorrect(string , string );
-	//void startInteraction();
 	vector <Clothes>startInteraction();
 private:
 	int checkInput(bool& , string );
 
 	void addClothes();
-	//void deleteClothes(int );
+	void deleteClothes(vector<Clothes>&);
 
 	bool isID(int);
 
