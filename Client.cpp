@@ -328,9 +328,11 @@ void Admin::addClothes() {
 		} while (price > 50000);
 		cout << "Количество: "; do {
 			count = input();
-			if (count > 5000)
+			if (count == 0)
+				cout << "Нельзя добавить 0шт.\n";
+			else if (count > 5000)
 				cout << "Пожалуйста, введите меньшее количество (на один экземпляр не более 5000шт на складе)\n";
-		} while (count > 5000);
+		} while (count > 5000 || count ==0);
 		cin.ignore();
 		if (!ADD()) {
 			continue;
