@@ -323,9 +323,12 @@ void Admin::addClothes() {
 				cout << "Размер должен быть кратен 2\n";
 		} while (size < 42 || size > 56 || size % 2 != 0);
 		cout << "Цена: "; do {
-			price = dinput(); if (price > 50000)
+			price = dinput(); 
+			if (price == 0)
+				cout << "Цена должна быть выше нуля\n";
+			else if (price > 50000)
 				cout << "Пожалуйста, введите цену поменьше\n";
-		} while (price > 50000);
+		} while (price > 50000 || price == 0);
 		cout << "Количество: "; do {
 			count = input();
 			if (count == 0)
