@@ -130,15 +130,14 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Clothes.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="validation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="Clothes.h" />
-    <ClInclude Include="validation.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Clothes.txt" />
+    <Text Include="user.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

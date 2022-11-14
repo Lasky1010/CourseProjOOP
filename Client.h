@@ -5,15 +5,16 @@
 #include <fstream>
 #include <string>
 #include "Clothes.h"
-
+#include"validation.h"
 
 class User {
 protected:
 	vector<Clothes> ClothesVector;
-	void showClothes(vector<Clothes>);
-	void findClothes(vector<Clothes>);
-	virtual vector <Clothes>startInteraction()=0;
-	bool checkEmpty(vector<Clothes>);
+	virtual vector <Clothes>startInteraction() = 0;
+	void showClothes();
+	void findClothes();
+	void sortClothes();
+	bool checkEmpty();
 };
 
 
@@ -45,7 +46,7 @@ private:
 	int checkInput(bool& , string );
 
 	void addClothes();
-	void deleteClothes(vector<Clothes>&);
+	void deleteClothes();
 
 	bool isID(int);
 
@@ -55,3 +56,4 @@ private:
 vector <Client>userFromFile();
 void saveUsers(vector<Client>);
 bool checkUniq(string , vector<Client> );
+bool isValidName(string);

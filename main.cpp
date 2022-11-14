@@ -47,23 +47,24 @@ int main()
             }
         }
         else if (access == 3) {
-            cout << "Введите: ";
-            int regChoice = input();
-            system("cls");
+            int regChoice;
+            do {
+                regChoice = input();
+                system("cls");
+                if (regChoice > 2) {
+                    cout << "Пожалуйста, введите либо 1, либо 2\n->";
+                }
+            } while (regChoice > 2);
             if (regChoice == 1)
             {
-                bool flag;
                 string login, pass;
-                cout << "----- Регистрация -----" << endl;
+                cout << "------ Регистрация ------" << endl;
                 cout << "Введите логин: ";
                 cin >> login;
-                flag = checkUniq(login, ClientVector);
-                if (flag == false)
+                if (checkUniq(login, ClientVector) == false)
                 {
                     cout << "Введите пароль: ";
                     cin >> pass;
-                    flag = NEW();
-                    if (flag == false) break;
                     Client c(login, pass,ClothesVector);
                     ClientVector.push_back(c);
                     ClothesVector=c.startInteraction();
@@ -72,7 +73,9 @@ int main()
                         Exit(ClothesVector, ClientVector);
                     }
                 }
-                else cout << "Пользователь под логином \"" << login << "\" уже есть!" << endl;
+                else { 
+                    cout << "Пользователь под логином \"" << login << "\" уже есть!" << endl; 
+                }
             }
             else if (regChoice == 2) {
                 access = entry(ClientVector);
@@ -117,14 +120,14 @@ int authentication(string login, string password, vector<Client>ClientVector) {
     if (login == alog && password == apass) {
         return 1;
     }
-    else if (ClientVector.size() != 0) {
+    else {
         for (int i = 0; i < ClientVector.size(); i++) {
             if (ClientVector[i].getLogin() == login && ClientVector[i].getPass() == password) 
             {
                 return 2;
             }
         }
-        cout << "\nЛогин или пароль введен неправильно!\nИли такого пользователя не существует\nХотите зарегестрироваться ?\n1 - Да\n2 - Нет\n";
+        cout << "\nЛогин или пароль введен неправильно!\nТакого пользователя не существует\nХотите зарегестрироваться ? \n1.Да\n2.Нет\n->";
         return 3;
     }
 }

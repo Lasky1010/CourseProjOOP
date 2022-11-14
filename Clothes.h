@@ -15,7 +15,9 @@ void to_lower(vector<CL>& lower);
 
 int input();
 double dinput();
-
+bool ADD();
+bool DEL();
+bool EDIT();
 
 class Clothes {
 protected:

@@ -24,9 +24,6 @@
     <ClCompile Include="Clothes.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="validation.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clothes.h">
@@ -35,12 +32,12 @@
     <ClInclude Include="Client.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="validation.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Clothes.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="user.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
   </ItemGroup>

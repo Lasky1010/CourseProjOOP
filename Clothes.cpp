@@ -10,17 +10,15 @@
 #include<fstream>
 
 using namespace std;
-bool isValidName();
-
+//               Функции
 void saveClothes(vector<Clothes> ClothesVector) {
 	ofstream of("Clothes.txt");
 	for (auto iter :ClothesVector) {
 		
 		of << iter.getID() << "\n" << iter.getType() << "\n" << iter.getBrand() <<
 			"\n" << iter.getArt() << "\n" <<iter.getSize() << "\n"
-			<< iter.getColor() << "\n" << iter.getPrice()<<"\n"<<iter.getCount();
+			<< iter.getColor() << "\n" << iter.getPrice()<<"\n"<<iter.getCount()<<"\n";
 	}
-	of << endl;
 	of.close();
 }
 vector<Clothes> clothesFromFile() {
@@ -59,8 +57,97 @@ vector<Clothes> clothesFromFile() {
 	in.close();
 	return ClothesVector;
 }
-Clothes::Clothes(int id, string type, string brand, string art, int size, string color, double price, int count):id(id), type(type), brand(brand), art(art), size(size), color(color), price(price), count(count) {}
+char to_lowercase(char c)
+{
+	if ((c >= 'A' && c <= 'Z') || (c >= 'А' && c <= 'Я'))
+	{
+		return c + 32;
+	}
 
+	return c;
+}
+void to_lower(vector<CL>& lower) {
+	for (int i = 0; i < lower.size(); i++) {
+		for (char& c : lower[i].TYPE) {
+			c = to_lowercase(c);
+		}
+		for (char& c : lower[i].BRAND) {
+			c = to_lowercase(c);
+		}
+		for (char& c : lower[i].COLOR) {
+			c = to_lowercase(c);
+		}
+	}
+}
+int input()
+{
+	int n;
+	while (true) {
+		try {
+			if (!(cin >> n))
+			{
+				throw runtime_error("Вы ввели не число\n");
+			}
+			else if (n < 0) {
+				throw runtime_error("Вы ввели отрицательное число\n");
+			}
+			return n;
+		}
+		catch (runtime_error& err) {
+			cout << err.what();
+			cin.clear();
+			while (cin.get() != '\n');
+		}
+	}
+}
+double dinput()
+{
+	double n;
+	while (true) {
+		try {
+			if (!(cin >> n))
+			{
+				throw runtime_error("Вы ввели не число\n");
+			}
+			else if (n < 0) {
+				throw runtime_error("Вы ввели отрицательное число\n");
+			}
+			return n;
+		}
+		catch (runtime_error& err) {
+			cout << err.what();
+			cin.clear();
+			while (cin.get() != '\n');
+		}
+	}
+}
+bool ADD() {
+	cout << "\nУверены что хотите добавить ?\n";
+	cout << "1.Да\n2.Нет\n->";
+	int n = input();
+	system("cls");
+	if (n == 1) return true;
+	return false;
+}
+bool DEL() {
+	cout << "Уверены что хотите удалить ?\n";
+	cout << "1.Да\n2.Нет\n->";
+	int n = input();
+	system("cls");
+	if (n == 1) return true;
+	return false;
+}
+bool EDIT() {
+	cout << "Уверены что хотите редактировать ?\n";
+	cout << "1.Да\n2.Нет\n->";
+	int n = input();
+	system("cls");
+	if (n == 1) return true;
+	return false;
+}
+
+//              Clothes
+Clothes::Clothes(int id, string type, string brand, string art, int size, string color, double price, int count):id(id), type(type), brand(brand), art(art), size(size), color(color), price(price), count(count) {}
 int Clothes::createID() {
 	srand(unsigned(time(0)));
 	int randomVariable = rand() % 100;
@@ -75,7 +162,6 @@ void Clothes::setCount(int count) {
 int Clothes::getCount() {
 	return this->count;
 }
-
 Clothes::Clothes(string type, string brand, string art, int size, string color, double price,int count) :type(type), brand(brand), art(art), size(size), color(color), price(price) ,count(count) { this->id = createID(); }
 Clothes :: Clothes(){
 	id = 0;
@@ -87,7 +173,6 @@ Clothes :: Clothes(){
 	art = "";
 	count = 0;
 }
-
 void Clothes::setType(string type) {
 	this->type = type;
 }
@@ -131,70 +216,6 @@ string Clothes::getArt() {
 	return art;
 }
 
-char to_lowercase(char c)
-{
-	if ((c >= 'A' && c <= 'Z') || (c >= 'А' && c <= 'Я'))
-	{
-		return c + 32;
-	}
-
-	return c;
-}
-void to_lower(vector<CL>& lower) {
-	for (int i = 0; i < lower.size(); i++) {
-		for (char& c : lower[i].TYPE) {
-			c = to_lowercase(c);
-		}
-		for (char& c : lower[i].BRAND) {
-			c = to_lowercase(c);
-		}
-		for (char& c : lower[i].COLOR) {
-			c = to_lowercase(c);
-		}
-	}
-}
-
-int input()
-{
-	int n;
-	while (true) {
-		if (!(cin >> n))
-		{
-			cout << "Вы ввели не число\n";
-		}
-		else if (n < 0) {
-			cout << "Вы ввели отрицательное число\n";
-		}
-		return n;
-	}
-}
-double dinput()
-{
-	double n;
-	while (true) {
-		if (!(cin >> n))
-		{
-			cout << "Вы ввели не число\n";
-		}
-		else if (n < 0) {
-			cout << "Вы ввели отрицательное число\n";
-		}
-		return n;
-	}
-}
-bool isValidName(string name) {
-	/*if (name == "") return false;
-	else */if (name == string(name.length(), ' ')) return false;
-	bool isa = true;
-	for (int i = 0; i < name.size(); i++) {
-		if ( name[i] == '\n' || name[i] == '\0')
-			isa = false;
-		else {
-			isa = true;
-		}
-	}
-	return isa;
-}
 
 
 // Перегрузки
