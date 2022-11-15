@@ -59,5 +59,5 @@ private:
 
 vector <Client>userFromFile();
 void saveUsers(vector<Client>);
-bool checkUniq(string , vector<Client> );
+bool checkUniq(string , vector<Client>,Admin& );
 bool isValidName(string);

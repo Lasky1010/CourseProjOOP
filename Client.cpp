@@ -16,8 +16,7 @@ void saveUsers(vector<Client> Clients) {
 	}
 	of.close();
 }
-bool checkUniq(string log, vector<Client> ClientVector) {
-	Admin a;
+bool checkUniq(string log, vector<Client> ClientVector,Admin &a) {
 	for (auto iter : ClientVector) {
 		if (iter.getLogin() == log || log == a.getLog()) {
 			return true;
