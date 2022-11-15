@@ -6,7 +6,6 @@
 #include <fstream>
 #include "Clothes.h"
 #include "Client.h"
-#include"validation.h"
 using namespace std;
 
 void Exit(vector<Clothes> , vector<Client> );
@@ -14,7 +13,7 @@ int input();
 
 
 int entry(vector<Client>);
-int authentication(string, string,vector<Client>);
+int authentication(string, string,vector<Client>,Admin&);
 bool isValidName(string);
 
 int main()
@@ -97,6 +96,7 @@ void Exit(vector<Clothes> Clothesvector, vector<Client> Clientvector) {
 
 
 int entry(vector<Client> Clientvector) {
+    Admin a; a.setAdminLogPass();
     int access = 0;
     string login, pass;
     cout << "¬ведите \"exit\", если хотите выйти\n";
@@ -106,18 +106,11 @@ int entry(vector<Client> Clientvector) {
     cout << "ѕароль:\t";
     cin >> pass;
     if (pass == "exit") return 9;
-    access = authentication(login, pass,Clientvector);
+    access = authentication(login, pass,Clientvector,a);
     return access;
 }
-int authentication(string login, string password, vector<Client>ClientVector) {
-    ifstream file("admin.txt");
-    string alog, apass;
-    if (file.is_open()) {
-        getline(file, alog);
-        getline(file, apass);
-        file.close();
-    }
-    if (login == alog && password == apass) {
+int authentication(string login, string password, vector<Client>ClientVector,Admin&a) {
+    if (login ==a.getLog() && password == a.getPass()) {
         return 1;
     }
     else {

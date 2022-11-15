@@ -5,7 +5,6 @@
 #include <fstream>
 #include <string>
 #include "Clothes.h"
-#include"validation.h"
 
 class User {
 protected:
@@ -33,11 +32,14 @@ public:
 };
 class Admin : public User {
 private:
-	string AdminLog = "admin";
-	string AdminPass = "admin";
+	string AdminLog;
+	string AdminPass;
 public:
+	Admin();
 	string getPass();
 	string getLog();
+	void setAdminLogPass();
+	void saveAdminLogPass();
 	Admin(vector<Clothes>);
 	void setList(vector<Clothes> );
 	bool isDataCorrect(string , string );
@@ -52,6 +54,8 @@ private:
 
 	void editLogPass();
 };
+
+
 
 vector <Client>userFromFile();
 void saveUsers(vector<Client>);

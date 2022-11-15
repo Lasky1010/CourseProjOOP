@@ -10,14 +10,16 @@
 //                  Функции
 void saveUsers(vector<Client> Clients) {
 	ofstream of("user.txt");
+	of.clear();
 	for (auto iter : Clients) {
 		of << iter.getLogin() << " " << iter.getPass() <<"\n";
 	}
 	of.close();
 }
-bool checkUniq(std::string log, std::vector<Client> ClientVector) {
+bool checkUniq(string log, vector<Client> ClientVector) {
+	Admin a;
 	for (auto iter : ClientVector) {
-		if (iter.getLogin() == log) {
+		if (iter.getLogin() == log || log == a.getLog()) {
 			return true;
 		}
 	}
@@ -48,9 +50,11 @@ vector<Client> userFromFile() {
 			in.close();
 			return vector;
 		}
-		while (!in.eof())
+		while (true)
 		{
+			
 			in >> client;
+			if (in.eof()) break;
 			vector.push_back(client);
 		}
 	}
@@ -346,6 +350,7 @@ void Admin::addClothes() {
 	}
 
 }
+Admin::Admin(){}
 void Admin::deleteClothes() {
 	cout << "\nВведите id вещи\n";
 	int inputID = input();
@@ -393,8 +398,6 @@ vector<Clothes> Client::startInteraction() {
 }
 vector<Clothes> Admin::startInteraction() {
 	int key;
-	bool $input;
-	string $inputID;
 
 	while (true) {
 		do {
@@ -479,8 +482,20 @@ string Client::getPass() { return password; }
 
 
 //           Admin
+void Admin:: setAdminLogPass() {
+	fstream adm("admin.txt", ios::in);
+	getline(adm, AdminLog);
+	getline(adm, AdminPass);
+}
+
+void Admin :: saveAdminLogPass() {
+	fstream adm("admin.txt", ios::out);
+	adm.clear();
+	adm << AdminLog << endl;
+	adm << AdminPass ;
+}
 string Admin::getPass() { return AdminPass; }
-string Admin::getLog() { return AdminLog; }
+string Admin::getLog() { return AdminLog; } 
 Admin::Admin(vector<Clothes>ClothesVector) {
 	this->ClothesVector = ClothesVector;
 }
@@ -507,27 +522,36 @@ void Admin::editLogPass() {
 
 	/**/
 	do {
-		cout << "\n1. Сменить логин и пароль\n2. Сменить логин\n3. Сменить пароль\n0. Выход";
+		//cout << "\n1. Сменить логин и пароль\n2. Сменить логин\n3. Сменить пароль\n0. Выход";
+		cout <<   "--------- Изменить ---------\n";
+		cout << "\n1.Логин и пароль   3.Пароль\n";
+		cout <<   "2.Логин            0.Назад\n\n";
+		cout <<   "----------------------------\n->";
 		key = input();
-		if (key > 3 || key < 0) {
+		if (key > 3 ) {
 			cout << "Такого пункта меню нет\n";
 		}
 		system("cls");
-	} while (key > 3 || key < 0);
+	} while (key > 3);
 
 	if (key == 1) {
-		cout << "\nВведите логин\n";
-		cin >> this->AdminLog;
-		cout << "\nВведите пароль\n";
-		cin >> this->AdminLog;
+		cout << "Введите";
+		cout << "\nЛогин: ";
+		cin >> AdminLog;
+		cout << "\nПароль: ";
+		cin >> AdminPass;
+		saveAdminLogPass();
 	}
 	else if (key == 2) {
-		cout << "\nВведите логин\n";
-		cin >> this->AdminLog;
+		cout << "\nВведите Логин:";
+		cin >> AdminLog;
+		saveAdminLogPass();
 	}
 	else if (key == 3) {
-		cout << "\nВведите пароль\n";
-		cin >> this->AdminLog;
+		cout << "\nВведите Пароль:";
+		cin >> AdminPass;
+		saveAdminLogPass();
+		
 	}
 	else if (key == 0) {
 		return;

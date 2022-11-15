@@ -136,6 +136,7 @@
     <ClInclude Include="Clothes.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="admin.txt" />
     <Text Include="Clothes.txt" />
     <Text Include="user.txt" />
   </ItemGroup>
