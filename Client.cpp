@@ -27,15 +27,61 @@ bool checkUniq(string log, vector<Client> ClientVector,Admin &a) {
 }
 bool isValidName(string name) {
 	if (name == string(name.length(), ' ')) return false;
-	bool isa = true;
 	for (int i = 0; i < name.size(); i++) {
 		if (name[i] == '\n' || name[i] == '\0')
-			isa = false;
-		else {
-			isa = true;
+			return false;
+	}
+	return true;
+}
+
+bool isValidPass(string name) {
+	if (name == string(name.length(), ' ')) return false;
+	if (name.size() < 8 || name.size()>15)
+	{
+		cout << "Пароль должен содержать от 8 до 15 символов\nПопробуйте ещё раз\n";
+		return false;
+	}
+	for (int i = 0; i < name.size(); i++) {
+		if (name[i] >= 192 && name[i] <= 255) {
+			cout << "Кириллица не поддерживается\nПопробуйте ещё раз\n";
+			return false;
 		}
 	}
-	return isa;
+	for (int i = 0; i < name.size(); i++) {
+		if (name[i] == ' ')
+		{
+			cout << "Пароль не может содержать пробел\nПопробуйте ещё раз\n";
+			return false;
+		}
+		else if(name[i] == '\n' || name[i] == '\0') {
+			return false;
+		}
+	}
+	return true;
+}
+bool isValidLogin(string name) {
+	if (name == string(name.length(), ' ')) return false;
+	if (name.size() < 3 || name.size() > 15)
+	{
+		cout << "Логин должен содержать от 3 до 15 символов\nПопробуйте ещё раз\n";
+	}
+	for (int i = 0; i < name.size(); i++) {
+		if (name[i] >= 192 && name[i] <= 255) {
+			cout << "Кириллица не поддерживается\nПопробуйте еще раз\n";
+			return false;
+		}
+	}
+	for (int i = 0; i < name.size(); i++) {
+		if (name[i] == ' ')
+		{
+			cout << "Логин не может содержать пробел\nПопробуйте ещё раз\n";
+			return false;
+		}
+		else if (name[i] == '\n' || name[i] == '\0') {
+			return false;
+		}
+	}
+	return true;
 }
 vector<Client> userFromFile() {
 	vector<Client> vector;
@@ -532,23 +578,45 @@ void Admin::editLogPass() {
 		}
 		system("cls");
 	} while (key > 3);
-
+	bool flag = true;;
 	if (key == 1) {
 		cout << "Введите";
-		cout << "\nЛогин: ";
-		cin >> AdminLog;
-		cout << "\nПароль: ";
-		cin >> AdminPass;
+		do {
+			flag = true;
+			cout << "\nЛогин: ";
+			getline(cin, AdminLog);
+			if (!isValidLogin(AdminLog))
+				flag = false;
+		} while (flag==false);
+		do {
+			flag = true;
+			cout << "\nПароль: ";
+			getline(cin, AdminPass);
+			if (!isValidPass(AdminLog))
+				flag = false;
+		} while (flag==false);
+		
 		saveAdminLogPass();
 	}
 	else if (key == 2) {
-		cout << "\nВведите Логин:";
-		cin >> AdminLog;
+		do {
+			flag = true;
+			cout << "\nЛогин: ";
+			getline(cin, AdminLog);
+			if (!isValidLogin(AdminLog))
+				flag = false;
+		} while (flag == false);
+		
 		saveAdminLogPass();
 	}
 	else if (key == 3) {
-		cout << "\nВведите Пароль:";
-		cin >> AdminPass;
+		do {
+			flag = true;
+			cout << "\nПароль: ";
+			getline(cin, AdminPass);
+			if (!isValidPass(AdminPass))
+				flag = false;
+		} while (flag == false);
 		saveAdminLogPass();
 		
 	}

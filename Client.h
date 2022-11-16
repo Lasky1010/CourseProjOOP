@@ -61,3 +61,5 @@ vector <Client>userFromFile();
 void saveUsers(vector<Client>);
 bool checkUniq(string , vector<Client>,Admin& );
 bool isValidName(string);
+bool isValidLogin(string);
+bool isValidPass(string);

@@ -60,18 +60,33 @@ int main()
             if (regChoice == 1)
             {
                 string login, pass;
-                bool flag;
+                bool flag,flag2;
                 do{
                     cout << "------ Регистрация ------" << endl;
-                    cout << "Введите логин: ";
-                    cin >> login;
+                    do
+                    {
+                        flag2 = true;
+                        cout << "Логин:\t";
+                        getline(cin, login);
+                        if (!isValidLogin(login)) {
+                            flag = false;
+                        }
+                    } while (flag == false);
+                   
                     flag = checkUniq(login, ClientVector, a);
                     if (flag == true) {
                         cout << "Пользователь под логином \"" << login << "\" уже есть!" << endl;
                     }
                 } while (flag ==true);
-                cout << "Введите пароль: ";
-                cin >> pass;
+                do {
+                    flag2 = true;
+                    cout << "Введите пароль:\t";
+                    getline(cin, pass);
+                    if (!isValidPass(login)) {
+                        flag2 = false;
+                    }
+                } while (flag2 == false);
+
                 Client c(login, pass,ClothesVector);
                 ClientVector.push_back(c);
                 ClothesVector=c.startInteraction();
@@ -97,18 +112,30 @@ void Exit(vector<Clothes> Clothesvector, vector<Client> Clientvector) {
     exit(0);
 }
 
-
-
 int entry(vector<Client> Clientvector,Admin &a) {
     a.setAdminLogPass();
     int access = 0;
     string login, pass;
     cout << "Введите \"exit\", если хотите выйти\n";
-    cout << "Логин:\t";
-    cin >> login;
+    bool flag ;
+    do
+    {
+        flag = true;
+        cout << "Логин:\t";
+        getline(cin, login);
+        if (!isValidLogin(login)) {
+            flag = false;
+        }
+    } while (flag == false);
     if (login == "exit") return 9;
-    cout << "Пароль:\t";
-    cin >> pass;
+    do {
+        flag = true;
+        cout << "Пароль:\t";
+        getline(cin, pass);
+        if (!isValidPass(login)) {
+            flag = false;
+        }
+    } while (flag == false);
     if (pass == "exit") return 9;
     access = authentication(login, pass,Clientvector,a);
     return access;
