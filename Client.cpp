@@ -42,20 +42,47 @@ bool isValidPass(string name) {
 		return false;
 	}
 	for (int i = 0; i < name.size(); i++) {
-		if (name[i] >= 192 && name[i] <= 255) {
-			cout << "Кириллица не поддерживается\nПопробуйте ещё раз\n";
-			return false;
-		}
-	}
-	for (int i = 0; i < name.size(); i++) {
 		if (name[i] == ' ')
 		{
 			cout << "Пароль не может содержать пробел\nПопробуйте ещё раз\n";
 			return false;
 		}
-		else if(name[i] == '\n' || name[i] == '\0') {
+		else if (name[i] == '\n' || name[i] == '\0') {
 			return false;
 		}
+	}
+	for (int i = 0; i < name.size(); i++) {
+		if (name[i] >= 192 && name[i] <= 255) {
+			cout << "Кириллица не поддерживается\nПопробуйте ещё раз\n";
+			return false;
+		}
+	}
+	bool flag=false;
+	for (int i = 0; i < name.size(); i++)
+	{
+		if (name[i] >= 'A' && name[i] <= 'Z')
+		{
+			flag = true;
+			break;
+		}
+	}
+	if (!flag)
+	{
+		cout << "Пароль должен содержать хотя бы одну заглавную букву\nПопробуйте ещё раз\n";
+		return false;
+	}
+	flag = false;
+	for (int i = 0; i < name.size(); i++)
+	{
+		if (name[i] >='0' && name[i]<='9')
+		{
+			flag = true;
+			break;
+		}
+	}
+	if (!flag)
+	{
+		cout << "Пароль должен содержать хотя бы одну цифру\nПопробуйте ещё раз\n";
 	}
 	return true;
 }
@@ -64,6 +91,7 @@ bool isValidLogin(string name) {
 	if (name.size() < 3 || name.size() > 15)
 	{
 		cout << "Логин должен содержать от 3 до 15 символов\nПопробуйте ещё раз\n";
+		return false;
 	}
 	for (int i = 0; i < name.size(); i++) {
 		if (name[i] >= 192 && name[i] <= 255) {
@@ -286,6 +314,7 @@ void User::sortClothes() {
 	else if (key == 2) {
 		cout << "1.А-Я\n2.Я-А\n0.Назад\n->";
 		int c = input();
+		cin.ignore();
 		if (c == 0) {}
 		else if (c == 1) {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
@@ -303,6 +332,7 @@ void User::sortClothes() {
 	else if (key == 3) {
 		cout << "1.По возрастанию\n2.По убыванию\n0.Назад\n->";
 		int c = input();
+		cin.ignore();
 		if (c == 9) {}
 		else if (c == 1) {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
@@ -321,6 +351,7 @@ void User::sortClothes() {
 
 		cout << "1.По возрастанию\n2.По убыванию\n0.Назад\n->";
 		int c = input();
+		cin.ignore();
 		if (c == 9) {}
 		else if (c == 1) {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
@@ -366,6 +397,7 @@ void Admin::addClothes() {
 		} while (!isValidName(art) || art != "М" && art != "M" && art != "Ж" && art != "Д");
 		cout << "Размер: "; do {
 			size = input();
+			cin.ignore();
 			if (size < 42 || size > 56)
 				cout << "Пожалуйта, попробуйте ввести другой размер\n";
 			else if (size % 2 != 0)
@@ -373,6 +405,7 @@ void Admin::addClothes() {
 		} while (size < 42 || size > 56 || size % 2 != 0);
 		cout << "Цена: "; do {
 			price = dinput(); 
+			cin.ignore();
 			if (price == 0)
 				cout << "Цена должна быть выше нуля\n";
 			else if (price > 50000)
@@ -380,12 +413,13 @@ void Admin::addClothes() {
 		} while (price > 50000 || price == 0);
 		cout << "Количество: "; do {
 			count = input();
+			cin.ignore();
 			if (count == 0)
 				cout << "Нельзя добавить 0шт.\n";
 			else if (count > 5000)
 				cout << "Пожалуйста, введите меньшее количество (на один экземпляр не более 5000шт на складе)\n";
 		} while (count > 5000 || count ==0);
-		cin.ignore();
+		//cin.ignore();
 		if (!ADD()) {
 			continue;
 		}
@@ -426,7 +460,7 @@ vector<Clothes> Client::startInteraction() {
 	while (true) {
 		cout << "\n1.Просмотр всего ассортиментаn\n2. По определенному фильтру\n0. Назад\n";
 		key = input();
-
+		cin.ignore();
 		if (key == 0) {
 			return ClothesVector;
 		}
@@ -454,6 +488,7 @@ vector<Clothes> Admin::startInteraction() {
 			cout << "\n\n--------------------------------------";
 			cout << "\n->";
 			key = input();
+			cin.ignore();
 			system("cls");
 			if (key > 7) {
 				cout << "Такого пункта меню нет\n";
@@ -573,6 +608,7 @@ void Admin::editLogPass() {
 		cout <<   "2.Логин            0.Назад\n\n";
 		cout <<   "----------------------------\n->";
 		key = input();
+		cin.ignore();
 		if (key > 3 ) {
 			cout << "Такого пункта меню нет\n";
 		}
@@ -587,14 +623,14 @@ void Admin::editLogPass() {
 			getline(cin, AdminLog);
 			if (!isValidLogin(AdminLog))
 				flag = false;
-		} while (flag==false);
+		} while (!flag);
 		do {
 			flag = true;
 			cout << "\nПароль: ";
 			getline(cin, AdminPass);
-			if (!isValidPass(AdminLog))
+			if (!isValidPass(AdminPass))
 				flag = false;
-		} while (flag==false);
+		} while (!flag);
 		
 		saveAdminLogPass();
 	}
@@ -605,7 +641,7 @@ void Admin::editLogPass() {
 			getline(cin, AdminLog);
 			if (!isValidLogin(AdminLog))
 				flag = false;
-		} while (flag == false);
+		} while (!flag);
 		
 		saveAdminLogPass();
 	}
@@ -616,7 +652,7 @@ void Admin::editLogPass() {
 			getline(cin, AdminPass);
 			if (!isValidPass(AdminPass))
 				flag = false;
-		} while (flag == false);
+		} while (!flag);
 		saveAdminLogPass();
 		
 	}
