@@ -123,32 +123,36 @@ double dinput()
 }
 bool BUY() {
 	cout << "\nУверены что хотите Купить ?\n";
-	cout << "1.Да\n2.Нет\n->";
+	cout << "     1.Да\t2.Нет\n->";
 	int n = input();
+	cin.ignore();
 	system("cls");
 	if (n == 1) return true;
 	return false;
 }
 bool ADD() {
 	cout << "\nУверены что хотите добавить ?\n";
-	cout << "1.Да\n2.Нет\n->";
+	cout << "     1.Да\t2.Нет\n->";
 	int n = input();
+	cin.ignore();
 	system("cls");
 	if (n == 1) return true;
 	return false;
 }
 bool DEL() {
 	cout << "Уверены что хотите удалить ?\n";
-	cout << "1.Да\n2.Нет\n->";
+	cout << "     1.Да\t2.Нет\n->";
 	int n = input();
+	cin.ignore();
 	system("cls");
 	if (n == 1) return true;
 	return false;
 }
 bool EDIT() {
 	cout << "Уверены что хотите редактировать ?\n";
-	cout << "1.Да\n2.Нет\n->";
+	cout << "     1.Да\t2.Нет\n->";
 	int n = input();
+	cin.ignore();
 	system("cls");
 	if (n == 1) return true;
 	return false;

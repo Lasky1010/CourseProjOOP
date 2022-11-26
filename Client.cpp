@@ -1,11 +1,13 @@
 #pragma once
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <list>
 #include <conio.h>
 #include <vector>
 #include <fstream>
 #include <algorithm>
+#include <ctime>
+#include<chrono>
 #include"Client.h"
 //                  Функции
 void saveUsers(vector<Client> Clients) {
@@ -101,6 +103,7 @@ bool isValidPass(string name) {
 	if (!flag)
 	{
 		cout << "Пароль должен содержать хотя бы одну цифру, попробуйте ещё раз\n";
+		return false;
 	}
 	return true;
 }
@@ -185,13 +188,13 @@ void User::findClothes() {
 		//cin.ignore();
 		choice = _getch();
 		system("cls");
-		if (choice != '1' && choice != '2' && choice != '3' && choice != '4' && choice != '5' && choice != '0') {
+		if (choice != '1' && choice != '2' && choice != '3' && choice != '4' && choice != '5' && choice != 27) {
 			cout << "Такого пункта меню нет\n";
 			flag = true;
 		}
 	} while (flag);
 
-	if (choice == '0') { lower.clear(); return; }
+	if (choice == 27) { lower.clear(); return; }
 	else if (choice == 1) {
 		cout << "Введите бренд: ";
 		string brand;
@@ -252,10 +255,10 @@ void User::findClothes() {
 
 	}
 	else if (choice == 4) {
-		cout << "1.Мужская\n2.Женская\n3.Детская\n0. Назад";
+		cout << "1.Мужская\n2.Женская\n3.Детская\nEsc.Назад";
 		int ch = _getch();
 		string art = "";
-		if (ch == '0') { return; }
+		if (ch == 27) { return; }
 		else if (ch == '1') { art = "М"; }
 		else if (ch == '2') { art = "Ж"; }
 		else if (ch == '3') { art = "Д"; }
@@ -297,19 +300,19 @@ void User::sortClothes() {
 		fl = false;
 		cout << "\n---------- Сортировать ----------\n\n";
 		cout << "1.По типу    3.По размеру\n";
-		cout << "2.По бренду  4.По цене\n0.Назад\n";
+		cout << "2.По бренду  4.По цене\nEsc.Назад\n";
 		cout << "\n---------------------------------\n->";
 		key = _getch();
 		system("cls");
-		if (key != '1' && key != '2' && key != '3' && key != '4' && key != '0') {
+		if (key != '1' && key != '2' && key != '3' && key != '4' && key != 27) {
 			cout << "Такого пункта меню нет\n";
 			fl = true;
 		}
 
 	} while (fl);
-	if (key == '0') { return; }
+	if (key == 27) { return; }
 	else if (key == '1') {
-		cout << "\n--------------------\n\n1.А-Я\n2.Я-А\n0.Назад\n\n--------------------\n->";
+		cout << "\n--------------------\n\n1.А-Я\n2.Я-А\nEsc.Назад\n\n--------------------\n->";
 		int c = _getch();
 		if (c == '9') {}
 		else if (c == '1') {
@@ -326,9 +329,9 @@ void User::sortClothes() {
 		}
 	}
 	else if (key == '2') {
-		cout << "1.А-Я\n2.Я-А\n0.Назад\n->";
+		cout << "1.А-Я\n2.Я-А\nEsc.Назад\n->";
 		int c = _getch();
-		if (c == '0') {}
+		if (c == 27) {}
 		else if (c == '1') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
@@ -343,9 +346,9 @@ void User::sortClothes() {
 		}
 	}
 	else if (key == '3') {
-		cout << "1.По возрастанию\n2.По убыванию\n0.Назад\n->";
+		cout << "1.По возрастанию\n2.По убыванию\nEsc.Назад\n->";
 		int c = _getch();
-		if (c == '0') {}
+		if (c == 27) {}
 		else if (c == '1') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
@@ -361,10 +364,10 @@ void User::sortClothes() {
 	}
 	else if (key == '4') {
 
-		cout << "1.По возрастанию\n2.По убыванию\n0.Назад\n->";
+		cout << "1.По возрастанию\n2.По убыванию\nEsc.Назад\n->";
 		int c = _getch();
 
-		if (c == '0') {}
+		if (c == 27) {}
 		else if (c == '1') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
@@ -378,7 +381,7 @@ void User::sortClothes() {
 				});
 		}
 	}
-
+	cout << "Успешно отсортировано\n";
 }
 void User::filterClothes() {
 	char key;
@@ -390,12 +393,12 @@ void User::filterClothes() {
 			cout << "\n---------------  Фильтр  ---------------\n\n";
 			cout << "1.По размеру и артикулу  4.По размеру и цвету\n\n";
 			cout << "2.По размеру и бренду    5.По размеру и цене\n\n";
-			cout << "3.По размеру и типу      0.Назад\n\n";
+			cout << "3.По размеру и типу      Esc.Назад\n\n";
 			cout << "\n\n--------------------------------------";
 			cout << "\n->";
 			key = _getch();
 			system("cls");
-			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '0') {
+			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != 27) {
 				cout << "Такого пункта меню нет\n";
 				flag = true;
 			}
@@ -417,10 +420,10 @@ void User::filterClothes() {
 			char ch;
 			string art;
 			do {
-				cout << "1.Мужская\n2.Женская\n3.Детская\n0. Назад";
+				cout << "1.Мужская\n2.Женская\n3.Детская\nEsc.Назад";
 				ch = _getch();
 				art = "";
-				if (ch == '0') { return; }
+				if (ch == 27) { return; }
 				else if (ch == '1') { art = "М"; }
 				else if (ch == '2') { art = "Ж"; }
 				else if (ch == '3') { art = "Д"; }
@@ -645,7 +648,14 @@ void Admin::deleteClothes() {
 	auto curr = find_if(ClothesVector.begin(), ClothesVector.end(), [inputID](Clothes& c) {
 		return c.getID() == inputID;
 		});
-	ClothesVector.erase(curr);
+	if (DEL()) {
+		ClothesVector.erase(curr);
+		cout << "Успешно удалено\n";
+	}
+	else {
+		cout << "Операция отменена\n";
+	}
+	
 
 }
 bool User::isID(int id) {
@@ -677,7 +687,7 @@ void Client::addCart() {
 	
 	do {
 		flag = false;
-		cout << "Сколько единиц хотите добавить в корзину ?";
+		cout << "Сколько единиц хотите добавить в корзину ?\n->";
 		kol = input();
 		cin.ignore();
 		if (kol > (*found).getCount()) {
@@ -688,7 +698,7 @@ void Client::addCart() {
 	Clothes add = *found;
 	add.setCount(kol);
 	cart.push_back(add);
-	cout << "Вещь добавлена вкорзину\n";
+	cout << "Вещь добавлена в корзину\n";
 }
 bool Client::checkCart() {
 	if (cart.empty()) {
@@ -705,17 +715,17 @@ void Client::menuCart() {
 			flag = false;
 			cout << "\n------------  Меню  ------------\n\n";
 			cout << "1.Просмотреть    3.Удалить\n\n";
-			cout << "2.Купить         0.Назад";
+			cout << "2.Купить         Esc.Назад";
 			cout << "\n\n------------------------------";
 			cout << "\n->";
 			key = _getch();
 			system("cls");
-			if (key != '1' && key != '2' && key != '3' && key != '0') {
+			if (key != '1' && key != '2' && key != '3' && key != 27) {
 				cout << "Такого пункта меню нет\n";
 				flag = true;
 			}
 		} while (flag);
-		if (key == '0')
+		if (key == 27)
 			return;
 		if (key == '1')
 			showCart();
@@ -727,7 +737,6 @@ void Client::menuCart() {
 }
 void Client::showCart() {
 	int i = 1;
-	double priceCart = 0;
 	for (auto i : cart)
 		priceCart += i.getPrice() * i.getCount();
 	cout << "Корзина: " << priceCart << "$\n";
@@ -753,6 +762,7 @@ void Client::deleteCart() {
 	} while (flag);
 	auto curr = cart.begin() + n-1;
 	cart.erase(curr);
+	priceCart -= (*curr).getPrice() * (*curr).getCount();
 }
 void Client::buy() {
 	enterCard();
@@ -763,11 +773,34 @@ void Client::buy() {
 				ClothesVector[i].setCount(ClothesVector[i].getCount() - cart[j].getCount());
 				j++;
 			}
+		auto now = std::chrono::system_clock::now();
+		std::time_t end_time = std::chrono::system_clock::to_time_t(now);
+		printBill(end_time);
 		cart.clear();
+
 	}
 	else return;
 }
+void Client::printBill(time_t end_time) {
 
+	ofstream file("bill.txt");
+	string str ="***************************\n"
+	        	"*                         *\n"
+	        	"* ООО \"Курсовой проект\"   *\n"
+	        	"*     ул.Платонова, 39    *\n"
+	        	"*                         *\n"
+	        	"***************************\n"
+	        	"                             \n"
+	        	"      Оплата: онлайн        \n"
+	        	"    Безналичный расчёт      \n"
+	        	"           "+to_string(priceCart)+"$\n"
+	        	"  " + ctime(&end_time) +"      \n"
+	        	"                             \n";
+
+	file << str;
+	cout << str;
+
+}
 void Client::enterCard() {
 	bool flag;
 	
@@ -819,7 +852,7 @@ void Client::enterCard() {
 }
 //            Методы startInteraction
 vector<Clothes> Client::startInteraction() {
-	int key;
+	char key;
 	bool flag;
 	while (true) {
 		do {
@@ -828,12 +861,12 @@ vector<Clothes> Client::startInteraction() {
 			cout << "1.Просмотр одежды  4.Сортировка\n\n";
 			cout << "2.Поиск            5.Купить\n\n";
 			cout << "3.Фильтрация       6.Корзина\n\n";
-			cout << "0.Назад            7.Пополнить баланс\n";
+			cout << "Esc.Назад            \n";
 			cout << "\n----------------------------------------";
 			cout << "\n->";
 			key = _getch();
 			system("cls");
-			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '6' && key != '0') {
+			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '6' && key != 27) {
 				cout << "Такого пункта меню нет\n";
 				flag = true;
 			}
@@ -875,6 +908,7 @@ vector<Clothes> Client::startInteraction() {
 			}
 		}
 		else if (key == '7') {
+
 		}
 	}
 
@@ -889,12 +923,12 @@ vector<Clothes> Admin::startInteraction() {
 			cout << "1.Добавить вещь    4.*Редактировать\n\n";
 			cout << "2.Просмотр одежды  5.Удалить\n\n";
 			cout << "3.Поиск            6.Сортировка\n\n";
-			cout << "0.Назад            7.Сменить логин\\пароль";
+			cout << "Esc.Назад            7.Сменить логин\\пароль";
 			cout << "\n\n--------------------------------------";
 			cout << "\n->";
 			key = _getch();
 			system("cls");
-			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '6' && key != '7' && key != '0') {
+			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '6' && key != '7' && key != 27) {
 				cout << "Такого пункта меню нет\n";
 				flag = true;
 			}
@@ -990,10 +1024,10 @@ void Admin::editLogPass() {
 		//cout << "\n1. Сменить логин и пароль\n2. Сменить логин\n3. Сменить пароль\n0. Выход";
 		cout << "--------- Изменить ---------\n";
 		cout << "\n1.Логин и пароль   3.Пароль\n";
-		cout << "2.Логин            0.Назад\n\n";
+		cout << "2.Логин              Esc.Назад\n\n";
 		cout << "----------------------------\n->";
 		key = _getch();
-		if (key != '1' && key != '2' && key != '3' && key != '0') {
+		if (key != '1' && key != '2' && key != '3' && key != 27) {
 			cout << "Такого пункта меню нет\n";
 		}
 		system("cls");

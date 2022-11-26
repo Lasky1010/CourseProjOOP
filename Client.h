@@ -25,6 +25,7 @@ class Client : public User {
 protected:
 	string login, password;
 	vector<Clothes> cart;
+	double priceCart = 0;
 	class Card {
 	public:
 		string cardNumber;
@@ -44,6 +45,7 @@ public:
 	void deleteCart();
 	void buy();
 	void enterCard();
+	void printBill(time_t);
 	bool isValidCard(string);
 	vector <Clothes> startInteraction();
 	friend ostream& operator<< (ostream& , Client&);
@@ -68,9 +70,6 @@ private:
 
 	void addClothes();
 	void deleteClothes();
-
-	
-
 	void editLogPass();
 };
 
