@@ -764,17 +764,31 @@ void Client::deleteCart() {
 	cart.erase(curr);
 	priceCart -= (*curr).getPrice() * (*curr).getCount();
 }
+void Client::writeReport(Clothes cart,time_t end_time) {
+	ofstream file("report.txt",ios::app);
+	file<<"Оплачено: "+to_string(priceCart) + "$\nID: "
+		+ to_string(cart.getID()) + "; "
+		+ cart.getBrand() + "; "
+		+ cart.getType() + "; "
+		+ cart.getArt() + "; "
+		+ cart.getColor() + "; "
+		+ to_string(cart.getSize()) + "\n"
+		+ ctime(&end_time) + "\n";
+
+}
 void Client::buy() {
 	enterCard();
 	int cartsize = cart.size();
+	auto now = std::chrono::system_clock::now();
+	std::time_t end_time = std::chrono::system_clock::to_time_t(now);
 	if (BUY()) {
 		for (int j=0,i = 0; j <cartsize ; i++)
 			if(cart[j].getID() == ClothesVector[i].getID()) {
 				ClothesVector[i].setCount(ClothesVector[i].getCount() - cart[j].getCount());
+				writeReport(cart[j], end_time);
 				j++;
 			}
-		auto now = std::chrono::system_clock::now();
-		std::time_t end_time = std::chrono::system_clock::to_time_t(now);
+
 		printBill(end_time);
 		cart.clear();
 
@@ -784,7 +798,7 @@ void Client::buy() {
 void Client::printBill(time_t end_time) {
 
 	ofstream file("bill.txt");
-	string str ="***************************\n"
+	string bill ="***************************\n"
 	        	"*                         *\n"
 	        	"* ООО \"Курсовой проект\"   *\n"
 	        	"*     ул.Платонова, 39    *\n"
@@ -797,8 +811,8 @@ void Client::printBill(time_t end_time) {
 	        	"  " + ctime(&end_time) +"      \n"
 	        	"                             \n";
 
-	file << str;
-	cout << str;
+	file << bill;
+	cout << bill;
 
 }
 void Client::enterCard() {
@@ -871,7 +885,7 @@ vector<Clothes> Client::startInteraction() {
 				flag = true;
 			}
 		} while (flag);
-		if (key == '0') {
+		if (key == 27) {
 			return ClothesVector;
 		}
 

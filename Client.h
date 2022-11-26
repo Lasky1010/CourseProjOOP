@@ -46,6 +46,7 @@ public:
 	void buy();
 	void enterCard();
 	void printBill(time_t);
+	void writeReport(Clothes,time_t);
 	bool isValidCard(string);
 	vector <Clothes> startInteraction();
 	friend ostream& operator<< (ostream& , Client&);
