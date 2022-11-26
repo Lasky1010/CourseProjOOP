@@ -10,7 +10,14 @@ using namespace std;
 
 void Exit(vector<Clothes>, vector<Client>);
 int input();
-
+void hidecursor()
+{
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = FALSE;
+	SetConsoleCursorInfo(consoleHandle, &info);
+}
 
 int entry(vector<Client>, Admin&);
 int authentication(string, string, vector<Client>, Admin&);
@@ -18,6 +25,7 @@ bool isValidName(string);
 
 int main()
 {
+	hidecursor();
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	setlocale(LC_ALL, "Russian");
@@ -51,14 +59,14 @@ int main()
 			do {
 				cout << "\nЛогин или пароль введен неправильно!";
 				cout << "\nИли такого пользователя не существует\nХотите зарегестрироваться ? \n1.Да\n2.Нет\n->";
-				regChoice = input();
-				cin.ignore();
+				//regChoice = input();
+				regChoice = _getch();
 				system("cls");
-				if (regChoice > 2) {
-					cout << "Пожалуйста, введите либо 1, либо 2\n->";
+				if (regChoice != '2' && regChoice !='1') {
+					cout << "Пожалуйста, нажмите либо 1, либо 2\n->";
 				}
-			} while (regChoice > 2);
-			if (regChoice == 1)
+			} while (regChoice != '2' && regChoice != '1');
+			if (regChoice == '1')
 			{
 				string login, pass;
 				bool flag, flag2;

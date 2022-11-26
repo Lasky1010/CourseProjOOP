@@ -12,11 +12,11 @@ void saveUsers(vector<Client> Clients) {
 	ofstream of("user.txt");
 	of.clear();
 	for (auto iter : Clients) {
-		of << iter.getLogin() << " " << iter.getPass() <<"\n";
+		of << iter.getLogin() << " " << iter.getPass() << "\n";
 	}
 	of.close();
 }
-bool checkUniq(string log, vector<Client> ClientVector,Admin &a) {
+bool checkUniq(string log, vector<Client> ClientVector, Admin& a) {
 	for (auto iter : ClientVector) {
 		if (iter.getLogin() == log || log == a.getLog()) {
 			return true;
@@ -33,12 +33,11 @@ bool isValidName(string name) {
 	}
 	return true;
 }
-
 bool isValidPass(string name) {
 	if (name == string(name.length(), ' ')) return false;
-	if (name.size() < 8 || name.size()>15)
+	if (name.size() < 8 || name.size() > 17)
 	{
-		cout << "Пароль должен содержать от 8 до 15 символов\nПопробуйте ещё раз\n";
+		cout << "Пароль должен содержать от 8 до 17 символов\nПопробуйте ещё раз\n";
 		return false;
 	}
 	for (int i = 0; i < name.size(); i++) {
@@ -57,7 +56,7 @@ bool isValidPass(string name) {
 			return false;
 		}
 	}
-	bool flag=false;
+	bool flag = false;
 	for (int i = 0; i < name.size(); i++)
 	{
 		if (name[i] >= 'A' && name[i] <= 'Z')
@@ -74,7 +73,7 @@ bool isValidPass(string name) {
 	flag = false;
 	for (int i = 0; i < name.size(); i++)
 	{
-		if (name[i] >='0' && name[i]<='9')
+		if (name[i] >= '0' && name[i] <= '9')
 		{
 			flag = true;
 			break;
@@ -125,7 +124,7 @@ vector<Client> userFromFile() {
 		}
 		while (true)
 		{
-			
+
 			in >> client;
 			if (in.eof()) break;
 			vector.push_back(client);
@@ -140,6 +139,8 @@ vector<Client> userFromFile() {
 }
 
 //            Методы для работы с одеждой
+
+
 bool User::checkEmpty() {
 	if (ClothesVector.empty()) {
 		cout << "Список одежды пуст\n";
@@ -158,25 +159,21 @@ void User::showClothes() {
 }
 void User::findClothes() {
 	int choice;
+	bool flag;
 	do {
+		flag = false;
 		cout << "Искать:\n1 - По бренду\n2 - По типу\n3 - По цвету\n4 - По артикулу\n5 - По размеру\n0 - Назад\n";
-		choice = input();
-		cin.ignore();
+		//choice = input();
+		//cin.ignore();
+		choice = _getch();
 		system("cls");
-		if (choice > 5) {
+		if (choice != '1' && choice != '2' && choice != '3' && choice != '4' && choice != '5' && choice != '0') {
 			cout << "Такого пункта меню нет\n";
+			flag = true;
 		}
-	} while (choice > 5);
-	vector <CL> lower;
-	for (int i = 0; i < ClothesVector.size(); i++) {
-		CL cl;
-		cl.BRAND = ClothesVector[i].getBrand();
-		cl.TYPE = ClothesVector[i].getType();
-		cl.COLOR = ClothesVector[i].getColor();
-		lower.push_back(cl);
-	}
-	to_lower(lower);
-	if (choice == 9) { lower.clear(); return; }
+	} while (flag);
+
+	if (choice == '0') { lower.clear(); return; }
 	else if (choice == 1) {
 		cout << "Введите бренд: ";
 		string brand;
@@ -184,7 +181,7 @@ void User::findClothes() {
 		getline(cin, brand);
 		for (char& c : brand) c = to_lowercase(c);
 		for (int i = 0; i < ClothesVector.size(); i++) {
-			if (ClothesVector[i].getBrand() == brand || lower[i].BRAND == brand) {
+			if (ClothesVector[i].getBrand() == brand && lower[i].BRAND == brand) {
 				find = true;
 				cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
 					"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
@@ -196,9 +193,8 @@ void User::findClothes() {
 			cout << "Не найдено\n";
 		}
 	}
-	else if (choice == 2) {
+	else if (choice == '2') {
 		cout << "Введите тип: ";
-		cin.ignore();
 		string type;
 		bool find = false;
 		getline(cin, type);
@@ -217,7 +213,7 @@ void User::findClothes() {
 			cout << "Не найдено\n";
 		}
 	}
-	else if (choice == 3) {
+	else if (choice == '3') {
 		string color;
 		cout << "Введите цвет: ";
 		bool find = false;
@@ -239,13 +235,12 @@ void User::findClothes() {
 	}
 	else if (choice == 4) {
 		cout << "1.Мужская\n2.Женская\n3.Детская\n0. Назад";
-		int ch = input();
-		cin.ignore();
+		int ch = _getch();
 		string art = "";
-		if (ch == 0) { return; }
-		else if (ch == 1) { art = "М"; }
-		else if (ch == 2) { art = "Ж"; }
-		else if (ch == 3) { art = "Д"; }
+		if (ch == '0') { return; }
+		else if (ch == '1') { art = "М"; }
+		else if (ch == '2') { art = "Ж"; }
+		else if (ch == '3') { art = "Д"; }
 		bool find = false;
 		for (auto iter : ClothesVector)
 			if (iter.getArt() == art) {
@@ -259,7 +254,7 @@ void User::findClothes() {
 			cout << "Не найдено\n";
 		}
 	}
-	else if (choice == 5) {
+	else if (choice == '5') {
 		cout << "Введите размер: ";
 		bool find = false;
 		int size = input();
@@ -279,87 +274,86 @@ void User::findClothes() {
 }
 void User::sortClothes() {
 	int key;
+	bool fl;
 	do {
+		fl = false;
 		cout << "\n---------- Сортировать ----------\n\n";
 		cout << "1.По типу    3.По размеру\n";
 		cout << "2.По бренду  4.По цене\n0.Назад\n";
 		cout << "\n---------------------------------\n->";
-		key = input();
-		cin.ignore();
+		key = _getch();
 		system("cls");
-		if (key > 4) {
+		if (key != '1' && key != '2' && key != '3' && key != '4' && key != '0') {
 			cout << "Такого пункта меню нет\n";
+			fl = true;
 		}
 
-	} while (true);
-	if (key == 0) { return; }
-	else if (key == 1) {
+	} while (fl);
+	if (key == '0') { return; }
+	else if (key == '1') {
 		cout << "\n--------------------\n\n1.А-Я\n2.Я-А\n0.Назад\n\n--------------------\n->";
-		int c = input();
-		cin.ignore();
-		if (c == 9) {}
-		else if (c == 1) {
+		int c = _getch();
+		if (c == '9') {}
+		else if (c == '1') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getType() < c1.getType();
 				});
 		}
-		else if (c == 2) {
+		else if (c == '2') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getType() > c2.getType();
 				});
 		}
 	}
-	else if (key == 2) {
+	else if (key == '2') {
 		cout << "1.А-Я\n2.Я-А\n0.Назад\n->";
-		int c = input();
-		cin.ignore();
-		if (c == 0) {}
-		else if (c == 1) {
+		int c = _getch();
+		if (c == '0') {}
+		else if (c == '1') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getBrand() < c2.getBrand();
 				});
 		}
-		else if (c == 2) {
+		else if (c == '2') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getBrand() > c2.getBrand();
 				});
 		}
 	}
-	else if (key == 3) {
+	else if (key == '3') {
 		cout << "1.По возрастанию\n2.По убыванию\n0.Назад\n->";
-		int c = input();
-		cin.ignore();
-		if (c == 9) {}
-		else if (c == 1) {
+		int c = _getch();
+		if (c == '0') {}
+		else if (c == '1') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getSize() < c2.getSize();
 				});
 		}
-		else if (c == 2) {
+		else if (c == '2') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getSize() > c2.getSize();
 				});
 		}
 	}
-	else if (key == 4) {
+	else if (key == '4') {
 
 		cout << "1.По возрастанию\n2.По убыванию\n0.Назад\n->";
-		int c = input();
-		cin.ignore();
-		if (c == 9) {}
-		else if (c == 1) {
+		int c = _getch();
+
+		if (c == '0') {}
+		else if (c == '1') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getPrice() < c2.getPrice();
 				});
 		}
-		else if (c == 2) {
+		else if (c == '2') {
 			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
 				{
 					return c1.getPrice() > c2.getPrice();
@@ -367,6 +361,186 @@ void User::sortClothes() {
 		}
 	}
 
+}
+
+void User::filterClothes() {
+	char key;
+	bool flag;
+	int size;
+	while (1) {
+		do {
+			flag = false;
+			cout << "\n---------------  Фильтр  ---------------\n\n";
+			cout << "1.По размеру и артикулу  4.По размеру и цвету\n\n";
+			cout << "2.По размеру и бренду    5.По размеру и цене\n\n";
+			cout << "3.По размеру и типу      0.Назад\n\n";
+			cout << "\n\n--------------------------------------";
+			cout << "\n->";
+			key = _getch();
+			system("cls");
+			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '0') {
+				cout << "Такого пункта меню нет\n";
+				flag = true;
+			}
+		} while (flag);
+		if (key == '0') {
+			return;
+		}
+		do {
+			cout << "Введите желаемый размер: ";
+			size = input();
+			cin.ignore();
+			if (size < 42 || size > 56)
+				cout << "Пожалуйта, попробуйте ввести другой размер\n";
+			else if (size % 2 != 0)
+				cout << "Размер должен быть кратен 2\n";
+		} while (size < 42 || size > 56 || size % 2 != 0);
+		if(key == '1') {
+			
+			char ch;
+			string art;
+			do {
+				cout << "1.Мужская\n2.Женская\n3.Детская\n0. Назад";
+				ch = _getch();
+				art = "";
+				if (ch == '0') { return; }
+				else if (ch == '1') { art = "М"; }
+				else if (ch == '2') { art = "Ж"; }
+				else if (ch == '3') { art = "Д"; }
+			} while (ch != '1' || ch != '2' || ch != '3' || ch != '0');
+			bool find = false;
+
+			for (auto iter : ClothesVector)
+				if (iter.getSize() == size && iter.getArt()==art) {
+					cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
+						"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+						<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
+						"\n---------------------\n";
+					find = true;
+				}
+			if (find == false) {
+				cout << "Не найдено\n";
+			}
+
+		}
+		else if (key == '2') {
+			string brand;
+			bool flag;
+			do {
+				flag = false;
+				cout << "Введите бренд: ";
+				string brand;
+				getline(cin, brand);
+				if (!isValidName(brand))
+					flag = true;
+			} while (flag);
+
+			bool find = false;
+
+			for (char& c : brand) c = to_lowercase(c);
+			for (int i = 0; i < ClothesVector.size(); i++) {
+				if (ClothesVector[i].getBrand() == brand && lower[i].BRAND == brand) {
+					find = true;
+					cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+						"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+						<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+						"\n---------------------\n";
+				}
+			}
+			if (find == false) {
+				cout << "Не найдено\n";
+			}
+		}
+		else if (key == '3') {
+			string type;
+			bool flag;
+			do {
+				flag = false;
+				cout << "Введите тип: ";
+				getline(cin, type);
+				if (!isValidName(type))
+					flag = true;
+			} while (flag);
+
+			bool find = false;
+
+			for (char& c : type) c = to_lowercase(c);
+			for (int i = 0; i < ClothesVector.size(); i++) {
+				if (ClothesVector[i].getType() == type && lower[i].TYPE == type) {
+					find = true;
+					cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+						"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+						<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+						"\n---------------------\n";
+				}
+			}
+			if (find == false) {
+				cout << "Не найдено\n";
+			}
+		}
+		else if (key == '4') {
+			string color;
+			bool flag;
+			do {
+				flag = false;
+				cout << "Введите цвет: ";
+				getline(cin, color);
+				if (!isValidName(color))
+					flag = true;
+			} while (flag);
+
+			bool find = false;
+
+			for (char& c : color) c = to_lowercase(c);
+			for (int i = 0; i < ClothesVector.size(); i++) {
+				if (ClothesVector[i].getBrand() == color && lower[i].COLOR == color) {
+					find = true;
+					cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
+						"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
+						<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
+						"\n---------------------\n";
+				}
+			}
+			if (find == false) {
+				cout << "Не найдено\n";
+			}
+		}
+		else if (key == '5') {
+			double MIN, MAX;
+			bool flag;
+			do {
+				flag = false;
+				cout << "От какой цены: "; MIN = dinput();
+				if (MIN > 50000) {
+					flag = true;
+					cout << "Максимум 50000$, попробуйте ещё раз\n";
+				}
+				cout << "До какой цены: "; MAX = dinput();
+				if (MAX > 50000) {
+					flag = true;
+					cout << "Максимум 50000$, попробуйте ещё раз\n";
+				}
+				if (MIN > MAX) {
+					flag = true;
+					cout << "Минимальный порог не может быть больше максимального, попробуйте ещё раз\n";
+				}
+			} while (flag);
+			bool find = false;
+
+			for (auto iter : ClothesVector)
+				if (iter.getSize() == size && (MIN <= iter.getPrice() <= MAX)) {
+					cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
+						"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+						<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
+						"\n---------------------\n";
+					find = true;
+				}
+			if (find == false) {
+				cout << "Не найдено\n";
+			}
+		}
+		
+	}
 }
 void Admin::addClothes() {
 	int n;
@@ -404,7 +578,7 @@ void Admin::addClothes() {
 				cout << "Размер должен быть кратен 2\n";
 		} while (size < 42 || size > 56 || size % 2 != 0);
 		cout << "Цена: "; do {
-			price = dinput(); 
+			price = dinput();
 			cin.ignore();
 			if (price == 0)
 				cout << "Цена должна быть выше нуля\n";
@@ -418,18 +592,24 @@ void Admin::addClothes() {
 				cout << "Нельзя добавить 0шт.\n";
 			else if (count > 5000)
 				cout << "Пожалуйста, введите меньшее количество (на один экземпляр не более 5000шт на складе)\n";
-		} while (count > 5000 || count ==0);
+		} while (count > 5000 || count == 0);
 		//cin.ignore();
 		if (!ADD()) {
 			continue;
 		}
+
+		CL cl;
+		cl.BRAND = brand;
+		cl.TYPE = type;
+		cl.COLOR = color;
+		lower.push_back(cl);
 		Clothes newClothes(type, brand, art, size, color, price, count);
 		ClothesVector.push_back(newClothes);
 		cout << "Успешно добавлено" << endl;
 	}
-
+	to_lower(lower);
 }
-Admin::Admin(){}
+Admin::Admin() {}
 void Admin::deleteClothes() {
 	cout << "\nВведите id вещи\n";
 	int inputID = input();
@@ -457,94 +637,116 @@ bool Admin::isID(int id) {
 //            Методы startInteraction
 vector<Clothes> Client::startInteraction() {
 	int key;
+	bool flag;
 	while (true) {
-		cout << "\n1.Просмотр всего ассортиментаn\n2. По определенному фильтру\n0. Назад\n";
-		key = input();
-		cin.ignore();
-		if (key == 0) {
+		do {
+			flag = false;
+			cout << "\n----------------  Меню  ----------------\n\n";
+			cout << "1.Просмотр одежды  4.Сортировка\n\n";
+			cout << "2.Поиск            5.Добавить в корзину\n\n";
+			cout << "3.Фильтрация       6.Корзина\n\n";
+			cout << "0.Назад            7.Сменить логин\\пароль";
+			cout << "\n\n--------------------------------------";
+			cout << "\n->";
+			key = _getch();
+			system("cls");
+			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '6' && key != '0') {
+				cout << "Такого пункта меню нет\n";
+				flag = true;
+			}
+		} while (flag);
+		if (key == '0') {
 			return ClothesVector;
 		}
 
-		else if (key == 1) {
-			//вывод всех вещей
+		else if (key == '1') {
+			if (!checkEmpty()) {
+				showClothes();
+			}
 		}
 
-		else if (key == 2) {
-			//
+		else if (key == '2') {
+			if (!checkEmpty()) {
+				findClothes();
+			}
+		}
+		else if (key == '3') {
+			if (!checkEmpty()) {
+				//filter
+			}
+		}
+		else if (key == '4') {
+			if (!checkEmpty()) {
+				sortClothes();
+			}
+		}
+		else if (key == '5') {
+			if (!checkEmpty()) {
+				///добавить в корзину
+			}
+		}
+		else if (key == '6') {
+			if (!checkEmpty()) {
+				///корзина
+			}
+		}
+		else if (key == '7') {
+
 		}
 	}
 
 }
 vector<Clothes> Admin::startInteraction() {
 	int key;
-
+	bool flag;
 	while (true) {
 		do {
+			flag = false;
 			cout << "\n----------------  Меню  ----------------\n\n";
-			cout << "1.Добавить вещь    4.Редактировать\n\n";
+			cout << "1.Добавить вещь    4.*Редактировать\n\n";
 			cout << "2.Просмотр одежды  5.Удалить\n\n";
 			cout << "3.Поиск            6.Сортировка\n\n";
 			cout << "0.Назад            7.Сменить логин\\пароль";
 			cout << "\n\n--------------------------------------";
 			cout << "\n->";
-			key = input();
-			cin.ignore();
+			key = _getch();
 			system("cls");
-			if (key > 7) {
+			if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '6' && key != '7' && key != '0') {
 				cout << "Такого пункта меню нет\n";
+				flag = true;
 			}
-		} while (key > 7);
-		if (key == 0) {
+		} while (flag);
+		if (key == '0') {
 			return ClothesVector;
 		}
-		else if (key == 1) {
+		else if (key == '1') {
 			addClothes();
 		}
-		else if (key == 2) {
+		else if (key == '2') {
 			if (!checkEmpty()) {
 				showClothes();
 			}
 		}
-		else if (key == 3) {
+		else if (key == '3') {
 			if (!checkEmpty()) {
 				findClothes();
 			}
 		}
-		else if (key == 5) {
+		else if (key == '5') {
 			if (!checkEmpty()) {
 				showClothes();
 				deleteClothes();
 			}
 		}
-		else if (key == 6) {
+		else if (key == '6') {
 			if (!checkEmpty()) {
 				sortClothes();
 			}
 		}
-		/*else if (key == 4) {
-			cout << "Введите id вещи\n";
-			cin >> $inputID;
-			$input = true;
-			int id = checkInput($input, $inputID);
-			if ($input) {
-				if (isID(id)) {
-					editClothes(id);
-				}
-				else {
-					cout << "Вещь не найдена\n";
-				}
-			}
-		}*/
-		/*else if (key == 6) {
-			ClothesVector.sort(SortClothes());
-			cout << "Список отсортирован\n";
-		}*/
-		else if (key == 7) {
+		else if (key == '7') {
 			editLogPass();
+			saveAdminLogPass();
 		}
-		/*else if (key == 8) {
-			filterClothes();
-		}*/
 	}
 }
 
@@ -562,20 +764,20 @@ string Client::getPass() { return password; }
 
 
 //           Admin
-void Admin:: setAdminLogPass() {
+void Admin::setAdminLogPass() {
 	fstream adm("admin.txt", ios::in);
 	getline(adm, AdminLog);
 	getline(adm, AdminPass);
 }
 
-void Admin :: saveAdminLogPass() {
+void Admin::saveAdminLogPass() {
 	fstream adm("admin.txt", ios::out);
 	adm.clear();
 	adm << AdminLog << endl;
-	adm << AdminPass ;
+	adm << AdminPass;
 }
 string Admin::getPass() { return AdminPass; }
-string Admin::getLog() { return AdminLog; } 
+string Admin::getLog() { return AdminLog; }
 Admin::Admin(vector<Clothes>ClothesVector) {
 	this->ClothesVector = ClothesVector;
 }
@@ -603,13 +805,12 @@ void Admin::editLogPass() {
 	/**/
 	do {
 		//cout << "\n1. Сменить логин и пароль\n2. Сменить логин\n3. Сменить пароль\n0. Выход";
-		cout <<   "--------- Изменить ---------\n";
+		cout << "--------- Изменить ---------\n";
 		cout << "\n1.Логин и пароль   3.Пароль\n";
-		cout <<   "2.Логин            0.Назад\n\n";
-		cout <<   "----------------------------\n->";
-		key = input();
-		cin.ignore();
-		if (key > 3 ) {
+		cout << "2.Логин            0.Назад\n\n";
+		cout << "----------------------------\n->";
+		key = _getch();
+		if (key != '1' && key != '2' && key != '3' && key != '0') {
 			cout << "Такого пункта меню нет\n";
 		}
 		system("cls");
@@ -631,8 +832,8 @@ void Admin::editLogPass() {
 			if (!isValidPass(AdminPass))
 				flag = false;
 		} while (!flag);
-		
-		saveAdminLogPass();
+
+
 	}
 	else if (key == 2) {
 		do {
@@ -642,8 +843,6 @@ void Admin::editLogPass() {
 			if (!isValidLogin(AdminLog))
 				flag = false;
 		} while (!flag);
-		
-		saveAdminLogPass();
 	}
 	else if (key == 3) {
 		do {
@@ -653,8 +852,7 @@ void Admin::editLogPass() {
 			if (!isValidPass(AdminPass))
 				flag = false;
 		} while (!flag);
-		saveAdminLogPass();
-		
+
 	}
 	else if (key == 0) {
 		return;

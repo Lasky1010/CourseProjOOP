@@ -8,12 +8,14 @@
 
 class User {
 protected:
+	vector <CL> lower;
 	vector<Clothes> ClothesVector;
 	virtual vector <Clothes>startInteraction() = 0;
 	void showClothes();
 	void findClothes();
 	void sortClothes();
 	bool checkEmpty();
+	void filterClothes();
 };
 
 
