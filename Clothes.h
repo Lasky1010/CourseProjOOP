@@ -16,6 +16,7 @@ void to_lower(vector<CL>& lower);
 int input();
 double dinput();
 bool ADD();
+bool BUY();
 bool DEL();
 bool EDIT();
 
@@ -29,6 +30,7 @@ protected:
 public:
 	Clothes(string , string , string , int , string , double,int);
 	Clothes(int,string, string, string, int, string, double, int);
+	Clothes(const Clothes&);
 	Clothes();
 	void setCount(int);
 	int getCount();

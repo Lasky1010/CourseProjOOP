@@ -121,6 +121,14 @@ double dinput()
 		}
 	}
 }
+bool BUY() {
+	cout << "\nУверены что хотите Купить ?\n";
+	cout << "1.Да\n2.Нет\n->";
+	int n = input();
+	system("cls");
+	if (n == 1) return true;
+	return false;
+}
 bool ADD() {
 	cout << "\nУверены что хотите добавить ?\n";
 	cout << "1.Да\n2.Нет\n->";
@@ -172,6 +180,16 @@ Clothes :: Clothes(){
 	color = "";
 	art = "";
 	count = 0;
+}
+Clothes::Clothes(const Clothes&obj) {
+	this->art = obj.art;
+	this->size = obj.size;
+	this->brand = obj.brand;
+	this->color = obj.color;
+	this->count = obj.count;
+	this->price = obj.price;
+	this->id = obj.id;
+	this->type = obj.type;
 }
 void Clothes::setType(string type) {
 	this->type = type;

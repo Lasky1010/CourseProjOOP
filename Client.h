@@ -16,18 +16,35 @@ protected:
 	void sortClothes();
 	bool checkEmpty();
 	void filterClothes();
+	bool isID(int);
 };
+
 
 
 class Client : public User {
 protected:
 	string login, password;
+	vector<Clothes> cart;
+	class Card {
+	public:
+		string cardNumber;
+		int month, year, cvv;
+	};
+	Card card;
 public:
 	Client();
 	Client(string , string, vector<Clothes>);
 	Client(vector<Clothes>);
 	string getLogin();
 	string getPass();
+	void menuCart();
+	void addCart();
+	bool checkCart();
+	void showCart();
+	void deleteCart();
+	void buy();
+	void enterCard();
+	bool isValidCard(string);
 	vector <Clothes> startInteraction();
 	friend ostream& operator<< (ostream& , Client&);
 	friend istream& operator>> (istream& , Client&);
@@ -52,7 +69,7 @@ private:
 	void addClothes();
 	void deleteClothes();
 
-	bool isID(int);
+	
 
 	void editLogPass();
 };

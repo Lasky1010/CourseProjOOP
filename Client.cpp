@@ -33,17 +33,36 @@ bool isValidName(string name) {
 	}
 	return true;
 }
+bool Client::isValidCard(string numb) {
+	if (numb == string(numb.length(), ' ')) return false;
+	if (numb.size() != 16) {
+		cout << "Номер карты состоит из 16 цифр, попробуйте ещё раз\n";
+		return false;
+	}
+	for (int i = 0; i < numb.size(); i++) {
+		if (!isdigit(numb[i])) {
+			cout << "Номер карты должен состоит только из цифр, попробуйте ещё раз\n";
+			return false;
+		}
+	}
+	for (int i = 0; i < numb.size(); i++) {
+		if (numb[i] == '\n' || numb[i] == '\0')
+			return false;
+	}
+
+	return true;
+}
 bool isValidPass(string name) {
 	if (name == string(name.length(), ' ')) return false;
 	if (name.size() < 8 || name.size() > 17)
 	{
-		cout << "Пароль должен содержать от 8 до 17 символов\nПопробуйте ещё раз\n";
+		cout << "Пароль должен содержать от 8 до 17 символов, попробуйте ещё раз\n";
 		return false;
 	}
 	for (int i = 0; i < name.size(); i++) {
 		if (name[i] == ' ')
 		{
-			cout << "Пароль не может содержать пробел\nПопробуйте ещё раз\n";
+			cout << "Пароль не может содержать пробел, попробуйте ещё раз\n";
 			return false;
 		}
 		else if (name[i] == '\n' || name[i] == '\0') {
@@ -52,7 +71,7 @@ bool isValidPass(string name) {
 	}
 	for (int i = 0; i < name.size(); i++) {
 		if (name[i] >= 192 && name[i] <= 255) {
-			cout << "Кириллица не поддерживается\nПопробуйте ещё раз\n";
+			cout << "Кириллица не поддерживается, попробуйте ещё раз\n";
 			return false;
 		}
 	}
@@ -67,7 +86,7 @@ bool isValidPass(string name) {
 	}
 	if (!flag)
 	{
-		cout << "Пароль должен содержать хотя бы одну заглавную букву\nПопробуйте ещё раз\n";
+		cout << "Пароль должен содержать хотя бы одну заглавную букву, попробуйте ещё раз\n";
 		return false;
 	}
 	flag = false;
@@ -81,7 +100,7 @@ bool isValidPass(string name) {
 	}
 	if (!flag)
 	{
-		cout << "Пароль должен содержать хотя бы одну цифру\nПопробуйте ещё раз\n";
+		cout << "Пароль должен содержать хотя бы одну цифру, попробуйте ещё раз\n";
 	}
 	return true;
 }
@@ -89,19 +108,19 @@ bool isValidLogin(string name) {
 	if (name == string(name.length(), ' ')) return false;
 	if (name.size() < 3 || name.size() > 15)
 	{
-		cout << "Логин должен содержать от 3 до 15 символов\nПопробуйте ещё раз\n";
+		cout << "Логин должен содержать от 3 до 15 символов, попробуйте ещё раз\n";
 		return false;
 	}
 	for (int i = 0; i < name.size(); i++) {
 		if (name[i] >= 192 && name[i] <= 255) {
-			cout << "Кириллица не поддерживается\nПопробуйте еще раз\n";
+			cout << "Кириллица не поддерживается, попробуйте еще раз\n";
 			return false;
 		}
 	}
 	for (int i = 0; i < name.size(); i++) {
 		if (name[i] == ' ')
 		{
-			cout << "Логин не может содержать пробел\nПопробуйте ещё раз\n";
+			cout << "Логин не может содержать пробел, попробуйте ещё раз\n";
 			return false;
 		}
 		else if (name[i] == '\n' || name[i] == '\0') {
@@ -139,8 +158,6 @@ vector<Client> userFromFile() {
 }
 
 //            Методы для работы с одеждой
-
-
 bool User::checkEmpty() {
 	if (ClothesVector.empty()) {
 		cout << "Список одежды пуст\n";
@@ -148,6 +165,7 @@ bool User::checkEmpty() {
 	}
 	return false;
 }
+
 void User::showClothes() {
 
 	for (auto iter : ClothesVector) {
@@ -362,7 +380,6 @@ void User::sortClothes() {
 	}
 
 }
-
 void User::filterClothes() {
 	char key;
 	bool flag;
@@ -395,8 +412,8 @@ void User::filterClothes() {
 			else if (size % 2 != 0)
 				cout << "Размер должен быть кратен 2\n";
 		} while (size < 42 || size > 56 || size % 2 != 0);
-		if(key == '1') {
-			
+		if (key == '1') {
+
 			char ch;
 			string art;
 			do {
@@ -407,11 +424,11 @@ void User::filterClothes() {
 				else if (ch == '1') { art = "М"; }
 				else if (ch == '2') { art = "Ж"; }
 				else if (ch == '3') { art = "Д"; }
-			} while (ch != '1' || ch != '2' || ch != '3' || ch != '0');
+			} while (ch != '1' && ch != '2' && ch != '3' && ch != '0');
 			bool find = false;
 
 			for (auto iter : ClothesVector)
-				if (iter.getSize() == size && iter.getArt()==art) {
+				if (iter.getSize() == size && iter.getArt() == art) {
 					cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
 						"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
 						<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
@@ -511,11 +528,13 @@ void User::filterClothes() {
 			do {
 				flag = false;
 				cout << "От какой цены: "; MIN = dinput();
+				cin.ignore();
 				if (MIN > 50000) {
 					flag = true;
 					cout << "Максимум 50000$, попробуйте ещё раз\n";
 				}
 				cout << "До какой цены: "; MAX = dinput();
+				cin.ignore();
 				if (MAX > 50000) {
 					flag = true;
 					cout << "Максимум 50000$, попробуйте ещё раз\n";
@@ -539,7 +558,7 @@ void User::filterClothes() {
 				cout << "Не найдено\n";
 			}
 		}
-		
+
 	}
 }
 void Admin::addClothes() {
@@ -611,21 +630,25 @@ void Admin::addClothes() {
 }
 Admin::Admin() {}
 void Admin::deleteClothes() {
-	cout << "\nВведите id вещи\n";
-	int inputID = input();
-	cin.ignore();
-	if (isID(inputID)) {
-		auto curr = find_if(ClothesVector.begin(), ClothesVector.end(), [inputID](Clothes& c) {
-			return c.getID() == inputID;
-			});
-		ClothesVector.erase(curr);
-	}
-	else {
-		cout << "Вещь не найдена\n";
-	}
+	int inputID;
+	bool flag;
+	do {
+		cout << "\nВведите id вещи\n";
+		flag = false;
+		inputID = input();
+		cin.ignore();
+		if (!isID(inputID)) {
+			flag = true;
+			cout << "Неверный ID, попробуйте ещё раз\n";
+		}
+	} while (flag);
+	auto curr = find_if(ClothesVector.begin(), ClothesVector.end(), [inputID](Clothes& c) {
+		return c.getID() == inputID;
+		});
+	ClothesVector.erase(curr);
 
 }
-bool Admin::isID(int id) {
+bool User::isID(int id) {
 	for (auto iter : ClothesVector) {
 		if (iter.getID() == id) {
 			return true;
@@ -633,7 +656,167 @@ bool Admin::isID(int id) {
 	}
 	return false;
 }
+void Client::addCart() {
+	cout << "Какую вещь добавить в корзину ?\n";
+	cout << "Введите id вещи: ";
+	int id;
+	bool flag;
+	do {
+		flag = false;
+		id = input();
+		cin.ignore();
+		if (!isID(id)) {
+			flag = true;
+			cout << "Неверный ID, попробуйте ещё раз\n";
+		}
+	} while (flag);
+	auto found = find_if(ClothesVector.begin(), ClothesVector.end(), [id](Clothes& c) {
+		return c.getID() == id;
+		});
+	int kol;
+	
+	do {
+		flag = false;
+		cout << "Сколько единиц хотите добавить в корзину ?";
+		kol = input();
+		cin.ignore();
+		if (kol > (*found).getCount()) {
+			flag = true;
+			cout << "Введенное количество превышает доступное количество данного товара, попробуйте ещё раз\n";
+		}
+	} while (flag);
+	Clothes add = *found;
+	add.setCount(kol);
+	cart.push_back(add);
+	cout << "Вещь добавлена вкорзину\n";
+}
+bool Client::checkCart() {
+	if (cart.empty()) {
+		cout << "Корзина пуста\n";
+		return true;
+	}
+	return false;
+}
+void Client::menuCart() {
+	char key;
+	bool flag;
+	while (true) {
+		do {
+			flag = false;
+			cout << "\n------------  Меню  ------------\n\n";
+			cout << "1.Просмотреть    3.Удалить\n\n";
+			cout << "2.Купить         0.Назад";
+			cout << "\n\n------------------------------";
+			cout << "\n->";
+			key = _getch();
+			system("cls");
+			if (key != '1' && key != '2' && key != '3' && key != '0') {
+				cout << "Такого пункта меню нет\n";
+				flag = true;
+			}
+		} while (flag);
+		if (key == '0')
+			return;
+		if (key == '1')
+			showCart();
+		else if (key == '2')
+			buy();
+		else if (key == '3')
+			deleteCart();
+	}
+}
+void Client::showCart() {
+	int i = 1;
+	double priceCart = 0;
+	for (auto i : cart)
+		priceCart += i.getPrice() * i.getCount();
+	cout << "Корзина: " << priceCart << "$\n";
+	for (auto iter : cart) {
+		cout <<"#" <<i++<< "\n№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
+			"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
+			<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
+			"\n---------------------\n";
+	}
+}
+void Client::deleteCart() {
+	int n;
+	bool flag;
+	do {
+		cout << "\nКакую вещь удалить из корзины по номеру: \n";
+		flag = false;
+		n = input();
+		cin.ignore();
+		if (n > cart.size()) {
+			flag = true;
+			cout << "Такой позиции нет, попробуйте ещё раз\n";
+		}
+	} while (flag);
+	auto curr = cart.begin() + n-1;
+	cart.erase(curr);
+}
+void Client::buy() {
+	enterCard();
+	int cartsize = cart.size();
+	if (BUY()) {
+		for (int j=0,i = 0; j <cartsize ; i++)
+			if(cart[j].getID() == ClothesVector[i].getID()) {
+				ClothesVector[i].setCount(ClothesVector[i].getCount() - cart[j].getCount());
+				j++;
+			}
+		cart.clear();
+	}
+	else return;
+}
 
+void Client::enterCard() {
+	bool flag;
+	
+	do {
+		cout << "Введите номер карты: ";
+		flag = false;
+		getline(cin, card.cardNumber);
+		if (!isValidCard(card.cardNumber))
+		{
+			flag = true;
+			cout << "Неверно введен номер банковской карты";
+		}
+	} while (flag);
+
+	cout << "Введите месяц и год окончания действительности карты\n";
+	do { 
+		flag = false;
+		card.month = input();
+		cin.ignore();
+		if (card.month > 12) {
+			cout << "Месяцев 12, попробуйте ещё раз\n";
+			flag = true;
+		}
+	} while (flag);
+	do {
+		flag = false;
+		card.year = input();
+		cin.ignore();
+		if (card.year < 2023) {
+			cout <<"Карта просрочена, попробуйте ещё раз\n";
+			flag = true;
+		}
+		if (card.year > 2030) {
+			cout << "Таких карт нет, попробуйте ещё раз\n";
+			flag = true;
+		}	
+	} while (flag);
+
+	do {
+		flag = false;
+		cout << "Введите CVV-код, расположенный на обратной стороне карты: ";
+		card.cvv = input();
+		cin.ignore();
+		if (card.cvv > 999 || card.cvv < 100) {
+			cout << "CVV-код должен быть трёхзначным, попробуйте ещё раз\n";
+			flag = true;
+		}
+	} while (flag);
+}
 //            Методы startInteraction
 vector<Clothes> Client::startInteraction() {
 	int key;
@@ -643,10 +826,10 @@ vector<Clothes> Client::startInteraction() {
 			flag = false;
 			cout << "\n----------------  Меню  ----------------\n\n";
 			cout << "1.Просмотр одежды  4.Сортировка\n\n";
-			cout << "2.Поиск            5.Добавить в корзину\n\n";
+			cout << "2.Поиск            5.Купить\n\n";
 			cout << "3.Фильтрация       6.Корзина\n\n";
-			cout << "0.Назад            7.Сменить логин\\пароль";
-			cout << "\n\n--------------------------------------";
+			cout << "0.Назад            7.Пополнить баланс\n";
+			cout << "\n----------------------------------------";
 			cout << "\n->";
 			key = _getch();
 			system("cls");
@@ -672,7 +855,7 @@ vector<Clothes> Client::startInteraction() {
 		}
 		else if (key == '3') {
 			if (!checkEmpty()) {
-				//filter
+				filterClothes();
 			}
 		}
 		else if (key == '4') {
@@ -682,16 +865,16 @@ vector<Clothes> Client::startInteraction() {
 		}
 		else if (key == '5') {
 			if (!checkEmpty()) {
-				///добавить в корзину
+				showClothes();
+				addCart();
 			}
 		}
 		else if (key == '6') {
-			if (!checkEmpty()) {
-				///корзина
+			if (!checkCart()) {
+				menuCart();
 			}
 		}
 		else if (key == '7') {
-
 		}
 	}
 
