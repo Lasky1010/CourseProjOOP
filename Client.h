@@ -14,6 +14,7 @@ protected:
 	void showClothes();
 	void findClothes();
 	void sortClothes();
+	void editClothes();
 	bool checkEmpty();
 	void filterClothes();
 	bool isID(int);

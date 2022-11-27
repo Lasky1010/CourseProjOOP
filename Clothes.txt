@@ -13,7 +13,7 @@ nike
 46
 white
 90
-41
+39
 8318
 puma
 puma

@@ -7,6 +7,7 @@
 #include <fstream>
 #include <algorithm>
 #include <ctime>
+#include<string>
 #include<chrono>
 #include"Client.h"
 //                  Функции
@@ -564,6 +565,139 @@ void User::filterClothes() {
 
 	}
 }
+void User::editClothes() {
+	int inputID;
+	bool flag;
+	do {
+		cout << "Товар с каким id хотите изменить : ";
+		flag = false;
+		inputID = input();
+		cin.ignore();
+		if (!isID(inputID)) {
+			flag = true;
+			cout << "Неверный ID, попробуйте ещё раз\n";
+		}
+	} while (flag);
+	char key;
+	do {
+		flag = false;
+		cout << "-------- Изменить --------\n\n";
+		cout << "1. Тип          4. Цвет\n";
+		cout << "2. Бренд        5. Цена\n";
+		cout << "3. Артикул      6. Размер\n";
+		cout << "Esc. Назад\n\n";
+		cout << "--------------------------\n->";
+		key = _getch();
+		if (key != '1' && key != '2' && key != '3' && key != '4' && key != '5' && key != '6' && key != '7' && key != 27) {
+			cout << "Такого пункта меню нет\n";
+			flag = true;
+		}
+	} while (flag);
+	if (key == 27) {
+		return;
+	}
+	auto curr = find_if(ClothesVector.begin(), ClothesVector.end(), [inputID](Clothes& c) {
+		return c.getID() == inputID;
+		});
+	if (key == '1') {
+		string type;
+		 do {
+			 cout << "Введите тип: ";
+			 getline(cin, type); 
+		 } while (!isValidName(type));
+		if(EDIT()){ 
+			(*curr).setType(type); 
+		}
+		else {
+			cout << "Операция отменена\n";
+		}
+		
+	}
+	else if(key=='2'){
+		string brand;
+		do {
+			cout << "Введите бренд: ";
+			getline(cin, brand);
+		} while (!isValidName(brand));
+		if (EDIT()) {
+			(*curr).setBrand(brand);
+		}
+		else {
+			cout << "Операция отменена\n";
+		}
+	}
+	else if (key == '3') {
+		string art;
+		 do {
+			 cout << "Введите артикул : ";
+			getline(cin, art);
+			if (!isValidName(art)) {
+				cout << "Введите что-нибудь\n";
+			}
+			else if (art != "М" && art != "M" && art != "Ж" && art != "Д")
+			{
+				cout << "Похоже вы ввели что-то не, попробуйте так:\n";
+				cout << "М - мужская, Ж - женская, Д - детская\n";
+			}
+		} while (!isValidName(art) || art != "М" && art != "M" && art != "Ж" && art != "Д");
+		if (EDIT()) {
+			(*curr).setArt(art);
+		}
+		else {
+			cout << "Операция отменена\n";
+		}
+	}
+	else if (key == '4') { 
+		string color;
+		do {
+			cout << "Введите цвет: ";
+			getline(cin, color);
+		} while (!isValidName(color));
+		if (EDIT()) {
+			(*curr).setColor(color);
+		}
+		else {
+			cout << "Операция отменена\n";
+		}
+	}
+	else if (key == '5') {
+		double price;
+		 do {
+			cout << "Введите цену: ";
+			price = dinput();
+			cin.ignore();
+			if (price == 0)
+				cout << "Цена должна быть выше нуля\n";
+			else if (price > 50000)
+				cout << "Пожалуйста, введите цену поменьше\n";
+		} while (price > 50000 || price == 0);
+		if (EDIT()) {
+			(*curr).setPrice(price);
+		}
+		else {
+			cout << "Операция отменена\n";
+		}
+	}
+	else if (key == '6') {
+		int size;
+		 do {
+			cout << "введите размер: ";
+			size = input();
+			cin.ignore();
+			if (size < 42 || size > 56)
+				cout << "Пожалуйта, попробуйте ввести другой размер\n";
+			else if (size % 2 != 0)
+				cout << "Размер должен быть кратен 2\n";
+		} while (size < 42 || size > 56 || size % 2 != 0);
+		if (EDIT()) {
+			(*curr).setSize(size);
+		}
+		else {
+			cout << "Операция отменена\n";
+		}
+	}
+	cout << "Успешно отредактировано\n";
+}
 void Admin::addClothes() {
 	int n;
 	cout << "Сколько вещей хотите добавить: ";
@@ -636,7 +770,7 @@ void Admin::deleteClothes() {
 	int inputID;
 	bool flag;
 	do {
-		cout << "\nВведите id вещи\n";
+		cout << "\nВведите id вещи: ";
 		flag = false;
 		inputID = input();
 		cin.ignore();
@@ -761,11 +895,23 @@ void Client::deleteCart() {
 		}
 	} while (flag);
 	auto curr = cart.begin() + n-1;
-	cart.erase(curr);
-	priceCart -= (*curr).getPrice() * (*curr).getCount();
+	if (DEL())
+	{
+		cart.erase(curr);
+		priceCart -= (*curr).getPrice() * (*curr).getCount();
+	}
+	else {
+		cout << "Операция отменена\n";
+	}
+	
 }
 void Client::writeReport(Clothes cart,time_t end_time) {
 	ofstream file("report.txt",ios::app);
+	string card4="**** **** **** ";
+	for (int i = 12; i < 16; i++)
+	{
+		card4 += card.cardNumber[i];
+	}
 	file<<"Оплачено: "+to_string(priceCart) + "$\nID: "
 		+ to_string(cart.getID()) + "; "
 		+ cart.getBrand() + "; "
@@ -773,6 +919,7 @@ void Client::writeReport(Clothes cart,time_t end_time) {
 		+ cart.getArt() + "; "
 		+ cart.getColor() + "; "
 		+ to_string(cart.getSize()) + "\n"
+		+ card4+ "\n"
 		+ ctime(&end_time) + "\n";
 
 }
@@ -875,7 +1022,7 @@ vector<Clothes> Client::startInteraction() {
 			cout << "1.Просмотр одежды  4.Сортировка\n\n";
 			cout << "2.Поиск            5.Купить\n\n";
 			cout << "3.Фильтрация       6.Корзина\n\n";
-			cout << "Esc.Назад            \n";
+			cout << "Esc.Назад\n";
 			cout << "\n----------------------------------------";
 			cout << "\n->";
 			key = _getch();
@@ -885,10 +1032,8 @@ vector<Clothes> Client::startInteraction() {
 				flag = true;
 			}
 		} while (flag);
-		if (key == 27) {
+		if (key == 27) 
 			return ClothesVector;
-		}
-
 		else if (key == '1') {
 			if (!checkEmpty()) {
 				showClothes();
@@ -901,29 +1046,28 @@ vector<Clothes> Client::startInteraction() {
 			}
 		}
 		else if (key == '3') {
-			if (!checkEmpty()) {
+			if (!checkEmpty())
 				filterClothes();
-			}
 		}
+			
 		else if (key == '4') {
-			if (!checkEmpty()) {
+			if (!checkEmpty())
 				sortClothes();
-			}
 		}
+			
 		else if (key == '5') {
 			if (!checkEmpty()) {
 				showClothes();
 				addCart();
 			}
 		}
+			
 		else if (key == '6') {
-			if (!checkCart()) {
+			if (!checkCart())
 				menuCart();
-			}
 		}
-		else if (key == '7') {
+			
 
-		}
 	}
 
 }
@@ -934,10 +1078,10 @@ vector<Clothes> Admin::startInteraction() {
 		do {
 			flag = false;
 			cout << "\n----------------  Меню  ----------------\n\n";
-			cout << "1.Добавить вещь    4.*Редактировать\n\n";
+			cout << "1.Добавить вещь    4.Редактировать\n\n";
 			cout << "2.Просмотр одежды  5.Удалить\n\n";
 			cout << "3.Поиск            6.Сортировка\n\n";
-			cout << "Esc.Назад            7.Сменить логин\\пароль";
+			cout << "Esc.Назад          7.Сменить логин\\пароль";
 			cout << "\n\n--------------------------------------";
 			cout << "\n->";
 			key = _getch();
@@ -961,6 +1105,12 @@ vector<Clothes> Admin::startInteraction() {
 		else if (key == '3') {
 			if (!checkEmpty()) {
 				findClothes();
+			}
+		}
+		else if (key == '4'){
+			if (!checkEmpty()) {
+				showClothes();
+				editClothes();
 			}
 		}
 		else if (key == '5') {

@@ -7,6 +7,7 @@
 #include"Clothes.h"
 #include <iomanip>
 #include<vector>
+#include<conio.h>
 #include<fstream>
 
 using namespace std;
@@ -122,39 +123,47 @@ double dinput()
 	}
 }
 bool BUY() {
-	cout << "\nУверены что хотите Купить ?\n";
-	cout << "     1.Да\t2.Нет\n->";
-	int n = input();
-	cin.ignore();
-	system("cls");
-	if (n == 1) return true;
+	char n; 
+	do {
+		cout << "\nУверены что хотите купить ?\n";
+		cout << "     1.Да\t2.Нет\n->";
+		n = _getch();
+		system("cls");
+	} while (n != '1' && n != '2');
+	if (n == '1') return true;
 	return false;
 }
 bool ADD() {
-	cout << "\nУверены что хотите добавить ?\n";
-	cout << "     1.Да\t2.Нет\n->";
-	int n = input();
-	cin.ignore();
-	system("cls");
-	if (n == 1) return true;
+	char n;
+	do {
+		cout << "\nУверены что хотите добавить ?\n";
+		cout << "     1.Да\t2.Нет\n->";
+		n = _getch();
+		system("cls");
+	} while (n != '1' && n != '2');
+	if (n == '1') return true;
 	return false;
 }
 bool DEL() {
-	cout << "Уверены что хотите удалить ?\n";
-	cout << "     1.Да\t2.Нет\n->";
-	int n = input();
-	cin.ignore();
-	system("cls");
-	if (n == 1) return true;
+	char n;
+	do {
+		cout << "\nУверены что хотите удалить ?\n";
+		cout << "     1.Да\t2.Нет\n->";
+		n = _getch();
+		system("cls");
+	} while (n != '1' && n != '2');
+	if (n == '1') return true;
 	return false;
 }
 bool EDIT() {
-	cout << "Уверены что хотите редактировать ?\n";
-	cout << "     1.Да\t2.Нет\n->";
-	int n = input();
-	cin.ignore();
-	system("cls");
-	if (n == 1) return true;
+	char n;
+	do {
+		cout << "\nУверены что хотите изменить ?\n";
+		cout << "     1.Да\t2.Нет\n->";
+		n = _getch();
+		system("cls");
+	} while (n != '1' && n != '2');
+	if (n == '1') return true;
 	return false;
 }
 
