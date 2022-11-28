@@ -847,6 +847,9 @@ void Client::menuCart() {
 	while (true) {
 		do {
 			flag = false;
+			for (auto x : cart)
+				priceCart += x.getPrice() * x.getCount();
+			cout << "Корзина: " << priceCart << "$";
 			cout << "\n------------  Меню  ------------\n\n";
 			cout << "1.Просмотреть    3.Удалить\n\n";
 			cout << "2.Купить         Esc.Назад";
@@ -861,19 +864,25 @@ void Client::menuCart() {
 		} while (flag);
 		if (key == 27)
 			return;
-		if (key == '1')
-			showCart();
-		else if (key == '2')
-			buy();
-		else if (key == '3')
-			deleteCart();
+		
+		if (key == '1') {
+			if (!checkCart())
+				showCart();
+		}
+			
+		else if (key == '2'){ 
+			if (!checkCart())
+				buy();
+		}
+			
+		else if (key == '3') {
+			if (!checkCart())
+				deleteCart();
+		}
 	}
 }
 void Client::showCart() {
 	int i = 1;
-	for (auto i : cart)
-		priceCart += i.getPrice() * i.getCount();
-	cout << "Корзина: " << priceCart << "$\n";
 	for (auto iter : cart) {
 		cout <<"#" <<i++<< "\n№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
 			"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
@@ -905,13 +914,9 @@ void Client::deleteCart() {
 	}
 	
 }
-void Client::writeReport(Clothes cart,time_t end_time) {
+void Client::writeReport(Clothes cart,time_t end_time,string card4) {
 	ofstream file("report.txt",ios::app);
-	string card4="**** **** **** ";
-	for (int i = 12; i < 16; i++)
-	{
-		card4 += card.cardNumber[i];
-	}
+	
 	file<<"Оплачено: "+to_string(priceCart) + "$\nID: "
 		+ to_string(cart.getID()) + "; "
 		+ cart.getBrand() + "; "
@@ -929,20 +934,26 @@ void Client::buy() {
 	auto now = std::chrono::system_clock::now();
 	std::time_t end_time = std::chrono::system_clock::to_time_t(now);
 	if (BUY()) {
+		string card4 = "**** **** **** ";
+		for (int i = 12; i < 16; i++)
+		{
+			card4 += card.cardNumber[i];
+		}
 		for (int j=0,i = 0; j <cartsize ; i++)
 			if(cart[j].getID() == ClothesVector[i].getID()) {
 				ClothesVector[i].setCount(ClothesVector[i].getCount() - cart[j].getCount());
-				writeReport(cart[j], end_time);
+				writeReport(cart[j], end_time,card4);
 				j++;
 			}
 
-		printBill(end_time);
+		printBill(end_time,card4);
+		priceCart = 0;
 		cart.clear();
 
 	}
 	else return;
 }
-void Client::printBill(time_t end_time) {
+void Client::printBill(time_t end_time,string card4) {
 
 	ofstream file("bill.txt");
 	string bill ="***************************\n"
@@ -956,7 +967,7 @@ void Client::printBill(time_t end_time) {
 	        	"    Безналичный расчёт      \n"
 	        	"           "+to_string(priceCart)+"$\n"
 	        	"  " + ctime(&end_time) +"      \n"
-	        	"                             \n";
+	        	+"    "+card4 + "\n";
 
 	file << bill;
 	cout << bill;

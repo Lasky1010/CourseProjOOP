@@ -83,6 +83,7 @@ int main()
 				char kod;
 				do {
 					flag2 = false;
+					pass = "";
 					cout << "Пароль:\t";
 					while (true) {
 
@@ -145,6 +146,7 @@ int entry(vector<Client> Clientvector, Admin& a) {
 	if (login == "Exit") return 9;
 	char kod;
 	do {
+		pass = "";
 		flag = false;
 		cout << "Пароль:\t";
 		while (true) {
