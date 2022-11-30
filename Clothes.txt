@@ -5,7 +5,7 @@ M
 53
 r
 40
-40
+39
 324
 nike
 nike
@@ -13,7 +13,7 @@ nike
 46
 white
 90
-33
+27
 8318
 puma
 puma
@@ -21,4 +21,4 @@ M
 48
 yellow
 100
-46
+39

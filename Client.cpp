@@ -914,19 +914,24 @@ void Client::deleteCart() {
 	}
 	
 }
-void Client::writeReport(Clothes cart,time_t end_time,string card4) {
+void Client::writeReport2(time_t end_time, string card4) {
+	ofstream file("report.txt", ios::app);
+
+	file << "Оплачено: " + to_string(priceCart)+"\n"
+		+ card4 + "\n"
+		+ ctime(&end_time) ;
+	file.close();
+}
+void Client::writeReport(Clothes cart) {
 	ofstream file("report.txt",ios::app);
-	
-	file<<"Оплачено: "+to_string(priceCart) + "$\nID: "
-		+ to_string(cart.getID()) + "; "
+	file << "ID: " + to_string(cart.getID()) + "; "
 		+ cart.getBrand() + "; "
 		+ cart.getType() + "; "
 		+ cart.getArt() + "; "
 		+ cart.getColor() + "; "
-		+ to_string(cart.getSize()) + "\n"
-		+ card4+ "\n"
-		+ ctime(&end_time) + "\n";
-
+		+ to_string(cart.getSize()) + "; "
+		+ to_string(cart.getCount()) + "шт.\n";
+	file.close();
 }
 void Client::buy() {
 	enterCard();
@@ -934,21 +939,32 @@ void Client::buy() {
 	auto now = std::chrono::system_clock::now();
 	std::time_t end_time = std::chrono::system_clock::to_time_t(now);
 	if (BUY()) {
+		ofstream file; 
+		file.open("report.txt", ios::app);
 		string card4 = "**** **** **** ";
 		for (int i = 12; i < 16; i++)
 		{
 			card4 += card.cardNumber[i];
 		}
-		for (int j=0,i = 0; j <cartsize ; i++)
-			if(cart[j].getID() == ClothesVector[i].getID()) {
+		
+		for (int j = 0, i = 0; j < cartsize;){
+			if (cart[j].getID() == ClothesVector[i].getID()) {
 				ClothesVector[i].setCount(ClothesVector[i].getCount() - cart[j].getCount());
-				writeReport(cart[j], end_time,card4);
+				writeReport(cart[j]);
 				j++;
+				i = 0;
 			}
-
+			else {
+				i++;
+			}
+		}
+		
+		writeReport2(end_time, card4);
+		file << "Покупатель: " << login << "\n\n";
 		printBill(end_time,card4);
 		priceCart = 0;
 		cart.clear();
+		file.close();
 
 	}
 	else return;
@@ -983,14 +999,14 @@ void Client::enterCard() {
 		if (!isValidCard(card.cardNumber))
 		{
 			flag = true;
-			cout << "Неверно введен номер банковской карты";
+			cout << "Неверно введен номер банковской карты\n";
 		}
 	} while (flag);
 
 	cout << "Введите месяц и год окончания действительности карты\n";
 	do { 
 		flag = false;
-		card.month = input();
+		cout << "Месяц: "; card.month = input();
 		cin.ignore();
 		if (card.month > 12) {
 			cout << "Месяцев 12, попробуйте ещё раз\n";
@@ -999,7 +1015,7 @@ void Client::enterCard() {
 	} while (flag);
 	do {
 		flag = false;
-		card.year = input();
+		cout << "Год: "; card.year = input();
 		cin.ignore();
 		if (card.year < 2023) {
 			cout <<"Карта просрочена, попробуйте ещё раз\n";

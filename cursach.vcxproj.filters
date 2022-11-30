@@ -43,5 +43,8 @@
     <Text Include="admin.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
+    <Text Include="report.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ using namespace std;
 
 void Exit(vector<Clothes>, vector<Client>);
 int input();
+
 void hidecursor()
 {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -19,35 +20,38 @@ void hidecursor()
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
 
-int entry(vector<Client>, Admin&);
+
+int entry(vector<Client>, Admin&,string&,string &);
 int authentication(string, string, vector<Client>, Admin&);
 bool isValidName(string);
 
 int main()
 {
 	hidecursor();
+	
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	setlocale(LC_ALL, "Russian");
 	vector<Clothes> ClothesVector = clothesFromFile();
 	vector<Client>ClientVector = userFromFile();
+	string entry_login, entry_password;
 	int key;
 	Admin a;
-	int access = entry(ClientVector, a);
+	int access = entry(ClientVector, a,entry_login,entry_password);
 	if (access == 9) 
 		Exit(ClothesVector, ClientVector);
 	while (true) {
 		if (access == 1) {
 			Admin admin(ClothesVector);
 			ClothesVector = admin.startInteraction();
-			access = entry(ClientVector, a);
+			access = entry(ClientVector, a,entry_login,entry_password);
 			if (access == 9) 
 				Exit(ClothesVector, ClientVector);
 		}
 		else if (access == 2) {
-			Client client(ClothesVector);
+			Client client(entry_login,entry_password,ClothesVector);
 			ClothesVector = client.startInteraction();
-			access = entry(ClientVector, a);
+			access = entry(ClientVector, a,entry_login,entry_password);
 			if (access == 9) 
 				Exit(ClothesVector, ClientVector);
 		}
@@ -63,7 +67,7 @@ int main()
 			} while (regChoice != '2' && regChoice != '1');
 			if (regChoice == '1')
 			{
-				string login, pass;
+				string reg_login, reg_pass;
 				bool flag, flag2;
 				do {
 					cout << "------ Регистрация ------" << endl;
@@ -71,50 +75,50 @@ int main()
 					{
 						flag2 = false;
 						cout << "Введите логин:\t";
-						getline(cin, login);
-						if (!isValidLogin(login))
+						getline(cin, reg_login);
+						if (!isValidLogin(reg_login))
 							flag2 = true;
 					} while (flag2);
 
-					flag = checkUniq(login, ClientVector, a);
+					flag = checkUniq(reg_login, ClientVector, a);
 					if (flag) 
-						cout << "Пользователь под логином \"" << login << "\" уже есть!" << endl;
+						cout << "Пользователь под логином \"" << reg_login << "\" уже есть!" << endl;
 				} while (flag);
 				char kod;
 				do {
 					flag2 = false;
-					pass = "";
+					reg_pass = "";
 					cout << "Пароль:\t";
 					while (true) {
 
 						kod = _getch();
 						if (kod == 8) {
-							if (!pass.length()) continue;
+							if (!reg_pass.length()) continue;
 							else
 								cout << "\b \b";
-							pass.resize(pass.length() - 1);
+							reg_pass.resize(reg_pass.length() - 1);
 						}
 						else if (kod == 13) {
 							break;
 						}
 						else {
-							pass += kod;
+							reg_pass += kod;
 							cout << "*";
 						}
 					}
 					cout << endl;
-					if (!isValidPass(pass))
+					if (!isValidPass(reg_pass))
 						flag2 = true;
 				} while (flag2);
-				Client c(login, pass, ClothesVector);
+				Client c(reg_login, reg_pass, ClothesVector);
 				ClientVector.push_back(c);
 				ClothesVector = c.startInteraction();
-				access = entry(ClientVector, a);
+				access = entry(ClientVector, a,entry_login,entry_password);
 				if (access == 9) 
 					Exit(ClothesVector, ClientVector);
 			}
 			else if (regChoice == '2') {
-				access = entry(ClientVector, a);
+				access = entry(ClientVector, a,entry_login,entry_password);
 				if (access == 9) 
 					Exit(ClothesVector, ClientVector);
 			}
@@ -129,10 +133,10 @@ void Exit(vector<Clothes> Clothesvector, vector<Client> Clientvector) {
 	exit(0);
 }
 
-int entry(vector<Client> Clientvector, Admin& a) {
+int entry(vector<Client> Clientvector, Admin& a,string &login,string &pass) {
 	a.setAdminLogPass();
 	int access = 0;
-	string login, pass;
+	
 	cout << "Введите \"Exit\", если хотите выйти\n";
 	bool flag;
 	do
