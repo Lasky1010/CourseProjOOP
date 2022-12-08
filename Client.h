@@ -23,16 +23,17 @@ protected:
 
 
 class Client : public User {
-protected:
-	string login, password;
-	vector<Clothes> cart;
-	double priceCart = 0;
+private:
 	class Card {
 	public:
 		string cardNumber;
 		int month, year, cvv;
 	};
 	Card card;
+	string login, password;
+	vector<Clothes> cart;
+	double priceCart = 0;
+
 public:
 	Client();
 	Client(string , string, vector<Clothes>);
@@ -58,22 +59,23 @@ class Admin : public User {
 private:
 	string AdminLog;
 	string AdminPass;
-public:
-	Admin();
-	string getPass();
-	string getLog();
-	void setAdminLogPass();
-	void saveAdminLogPass();
-	Admin(vector<Clothes>);
-	void setList(vector<Clothes> );
-	bool isDataCorrect(string , string );
-	vector <Clothes>startInteraction();
-private:
-	int checkInput(bool& , string );
+	int checkInput(bool&, string);
 
+	void saveAdminLogPass();
 	void addClothes();
 	void deleteClothes();
 	void editLogPass();
+public:
+	Admin();
+	Admin(vector<Clothes>);
+	string getPass();
+	string getLog();
+	void setAdminLogPass();
+	void setList(vector<Clothes> );
+	bool isDataCorrect(string, string);
+	vector <Clothes>startInteraction();
+	
+	
 };
 
 
@@ -81,6 +83,6 @@ private:
 vector <Client>userFromFile();
 void saveUsers(vector<Client>);
 bool checkUniq(string , vector<Client>,Admin& );
-bool isValidName(string);
+bool isValidString(string);
 bool isValidLogin(string);
 bool isValidPass(string);

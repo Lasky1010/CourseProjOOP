@@ -35,16 +35,21 @@ vector<Clothes> clothesFromFile() {
 		}
 		int i = 1;
 		int id,count, size;
-		string art, type, brand,color;
+		string p,art, type, brand,color;
 		double price;
 		while (true) {
 			in >> id;
 			if (in.eof()) break;
-			in >> type;
-			in >> brand;
+			//in >> type;
+			//in >> brand;
+			getline(in,p );
+			getline(in, type);
+			getline(in, brand);
 			in >> art;
 			in >> size;
-			in >> color;
+			getline(in, p);
+			getline(in, color);
+			//in >> color;
 			in >> price;
 			in >> count;
 			Clothes c(id,type,brand,art,size,color,price,count);

@@ -28,7 +28,7 @@ bool checkUniq(string log, vector<Client> ClientVector, Admin& a) {
 	return false;
 
 }
-bool isValidName(string name) {
+bool isValidString(string name) {
 	if (name == string(name.length(), ' ')) return false;
 	for (int i = 0; i < name.size(); i++) {
 		if (name[i] == '\n' || name[i] == '\0')
@@ -452,7 +452,7 @@ void User::filterClothes() {
 				cout << "Введите бренд: ";
 				string brand;
 				getline(cin, brand);
-				if (!isValidName(brand))
+				if (!isValidString(brand))
 					flag = true;
 			} while (flag);
 
@@ -479,7 +479,7 @@ void User::filterClothes() {
 				flag = false;
 				cout << "Введите тип: ";
 				getline(cin, type);
-				if (!isValidName(type))
+				if (!isValidString(type))
 					flag = true;
 			} while (flag);
 
@@ -506,7 +506,7 @@ void User::filterClothes() {
 				flag = false;
 				cout << "Введите цвет: ";
 				getline(cin, color);
-				if (!isValidName(color))
+				if (!isValidString(color))
 					flag = true;
 			} while (flag);
 
@@ -604,7 +604,7 @@ void User::editClothes() {
 		 do {
 			 cout << "Введите тип: ";
 			 getline(cin, type); 
-		 } while (!isValidName(type));
+		 } while (!isValidString(type));
 		if(EDIT()){ 
 			(*curr).setType(type); 
 		}
@@ -618,7 +618,7 @@ void User::editClothes() {
 		do {
 			cout << "Введите бренд: ";
 			getline(cin, brand);
-		} while (!isValidName(brand));
+		} while (!isValidString(brand));
 		if (EDIT()) {
 			(*curr).setBrand(brand);
 		}
@@ -631,7 +631,7 @@ void User::editClothes() {
 		 do {
 			 cout << "Введите артикул : ";
 			getline(cin, art);
-			if (!isValidName(art)) {
+			if (!isValidString(art)) {
 				cout << "Введите что-нибудь\n";
 			}
 			else if (art != "М" && art != "M" && art != "Ж" && art != "Д")
@@ -639,7 +639,7 @@ void User::editClothes() {
 				cout << "Похоже вы ввели что-то не, попробуйте так:\n";
 				cout << "М - мужская, Ж - женская, Д - детская\n";
 			}
-		} while (!isValidName(art) || art != "М" && art != "M" && art != "Ж" && art != "Д");
+		} while (!isValidString(art) || art != "М" && art != "M" && art != "Ж" && art != "Д");
 		if (EDIT()) {
 			(*curr).setArt(art);
 		}
@@ -652,7 +652,7 @@ void User::editClothes() {
 		do {
 			cout << "Введите цвет: ";
 			getline(cin, color);
-		} while (!isValidName(color));
+		} while (!isValidString(color));
 		if (EDIT()) {
 			(*curr).setColor(color);
 		}
@@ -711,12 +711,12 @@ void Admin::addClothes() {
 		/*
 		* рубашки, свитеры, куртки, олимпийки,джинсы, брюки, футболки, поло
 		*/
-		cout << "Тип: "; do { getline(cin, type); } while (!isValidName(type));
-		cout << "Бренд: "; do { getline(cin, brand); } while (!isValidName(brand));
-		cout << "Цвет: "; do { getline(cin, color); } while (!isValidName(color));
+		cout << "Тип: "; do { getline(cin, type); } while (!isValidString(type));
+		cout << "Бренд: "; do { getline(cin, brand); } while (!isValidString(brand));
+		cout << "Цвет: "; do { getline(cin, color); } while (!isValidString(color));
 		cout << "Артикул : "; do {
 			getline(cin, art);
-			if (!isValidName(art)) {
+			if (!isValidString(art)) {
 				cout << "Введите что-нибудь\n";
 			}
 			else if (art != "М" && art != "M" && art != "Ж" && art != "Д")
@@ -724,7 +724,7 @@ void Admin::addClothes() {
 				cout << "Похоже вы ввели что-то не, попробуйте так:\n";
 				cout << "М - мужская, Ж - женская, Д - детская\n";
 			}
-		} while (!isValidName(art) || art != "М" && art != "M" && art != "Ж" && art != "Д");
+		} while (!isValidString(art) || art != "М" && art != "M" && art != "Ж" && art != "Д");
 		cout << "Размер: "; do {
 			size = input();
 			cin.ignore();

@@ -7,10 +7,16 @@
 #include "Clothes.h"
 #include "Client.h"
 using namespace std;
-
+void centerLoadingStars();
 void Exit(vector<Clothes>, vector<Client>);
 int input();
+HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); 
 
+// Текстовый курсор в точку x,y
+void GoToXY(short x, short y)
+{
+	SetConsoleCursorPosition(hStdOut, { x, y });
+}
 void hidecursor()
 {
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -20,15 +26,14 @@ void hidecursor()
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
 
-
-int entry(vector<Client>, Admin&,string&,string &);
+void enterPass(string&);
+int entry(vector<Client>, Admin&, string&, string&);
 int authentication(string, string, vector<Client>, Admin&);
-bool isValidName(string);
+bool isValidString(string);
 
 int main()
 {
 	hidecursor();
-	
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	setlocale(LC_ALL, "Russian");
@@ -37,22 +42,22 @@ int main()
 	string entry_login, entry_password;
 	int key;
 	Admin a;
-	int access = entry(ClientVector, a,entry_login,entry_password);
-	if (access == 9) 
+	int access = entry(ClientVector, a, entry_login, entry_password);
+	if (access == 9)
 		Exit(ClothesVector, ClientVector);
 	while (true) {
 		if (access == 1) {
 			Admin admin(ClothesVector);
 			ClothesVector = admin.startInteraction();
-			access = entry(ClientVector, a,entry_login,entry_password);
-			if (access == 9) 
+			access = entry(ClientVector, a, entry_login, entry_password);
+			if (access == 9)
 				Exit(ClothesVector, ClientVector);
 		}
 		else if (access == 2) {
-			Client client(entry_login,entry_password,ClothesVector);
+			Client client(entry_login, entry_password, ClothesVector);
 			ClothesVector = client.startInteraction();
-			access = entry(ClientVector, a,entry_login,entry_password);
-			if (access == 9) 
+			access = entry(ClientVector, a, entry_login, entry_password);
+			if (access == 9)
 				Exit(ClothesVector, ClientVector);
 		}
 		else if (access == 3) {
@@ -62,7 +67,7 @@ int main()
 				cout << "\nИли такого пользователя не существует\nХотите зарегистрироваться ?\n     1.Да\t2.Нет\n->";
 				regChoice = _getch();
 				system("cls");
-				if (regChoice != '2' && regChoice !='1')
+				if (regChoice != '2' && regChoice != '1')
 					cout << "Пожалуйста, нажмите либо 1, либо 2\n->";
 			} while (regChoice != '2' && regChoice != '1');
 			if (regChoice == '1')
@@ -78,48 +83,29 @@ int main()
 						getline(cin, reg_login);
 						if (!isValidLogin(reg_login))
 							flag2 = true;
+						else if (reg_login == "Exit") {
+							flag2 = true;
+							cout << "Логин не может быть словом \"Exit\"\n";
+						}
+							
 					} while (flag2);
 
 					flag = checkUniq(reg_login, ClientVector, a);
-					if (flag) 
+					if (flag)
 						cout << "Пользователь под логином \"" << reg_login << "\" уже есть!" << endl;
 				} while (flag);
-				char kod;
-				do {
-					flag2 = false;
-					reg_pass = "";
-					cout << "Пароль:\t";
-					while (true) {
 
-						kod = _getch();
-						if (kod == 8) {
-							if (!reg_pass.length()) continue;
-							else
-								cout << "\b \b";
-							reg_pass.resize(reg_pass.length() - 1);
-						}
-						else if (kod == 13) {
-							break;
-						}
-						else {
-							reg_pass += kod;
-							cout << "*";
-						}
-					}
-					cout << endl;
-					if (!isValidPass(reg_pass))
-						flag2 = true;
-				} while (flag2);
+				enterPass(reg_pass);
 				Client c(reg_login, reg_pass, ClothesVector);
 				ClientVector.push_back(c);
 				ClothesVector = c.startInteraction();
-				access = entry(ClientVector, a,entry_login,entry_password);
-				if (access == 9) 
+				access = entry(ClientVector, a, entry_login, entry_password);
+				if (access == 9)
 					Exit(ClothesVector, ClientVector);
 			}
 			else if (regChoice == '2') {
-				access = entry(ClientVector, a,entry_login,entry_password);
-				if (access == 9) 
+				access = entry(ClientVector, a, entry_login, entry_password);
+				if (access == 9)
 					Exit(ClothesVector, ClientVector);
 			}
 		}
@@ -133,10 +119,9 @@ void Exit(vector<Clothes> Clothesvector, vector<Client> Clientvector) {
 	exit(0);
 }
 
-int entry(vector<Client> Clientvector, Admin& a,string &login,string &pass) {
+int entry(vector<Client> Clientvector, Admin& a, string& login, string& pass) {
 	a.setAdminLogPass();
 	int access = 0;
-	
 	cout << "Введите \"Exit\", если хотите выйти\n";
 	bool flag;
 	do
@@ -144,11 +129,45 @@ int entry(vector<Client> Clientvector, Admin& a,string &login,string &pass) {
 		flag = false;
 		cout << "Логин:\t";
 		getline(cin, login);
-		if (!isValidLogin(login)) 
+		if (!isValidLogin(login))
 			flag = true;
 	} while (flag);
 	if (login == "Exit") return 9;
+	enterPass(pass);
+	if (pass == "Exit") return 9;
+	centerLoadingStars();
+	access = authentication(login, pass, Clientvector, a);
+	return access;
+}
+int authentication(string login, string password, vector<Client>ClientVector, Admin& a) {
+	if (login == a.getLog() && password == a.getPass()) {
+		return 1;
+	}
+	else {
+		for (int i = 0; i < ClientVector.size(); i++) {
+			if (ClientVector[i].getLogin() == login && ClientVector[i].getPass() == password)
+			{
+				return 2;
+			}
+		}
+		return 3;
+	}
+}
+
+void centerLoadingStars() {
+	system("cls");
+	int x = 39;
+	Sleep(300); GoToXY(x, 10); cout << "* ";
+	Sleep(250); GoToXY(x + 2, 10); cout << "* ";
+	Sleep(250); GoToXY(x + 4, 10); cout << "* ";
+	Sleep(250); GoToXY(x + 6, 10); cout << "* ";
+	Sleep(250); GoToXY(x + 8, 10); cout << "*"; Sleep(200);
+	system("cls");
+}
+
+void enterPass(string &pass) {
 	char kod;
+	bool flag;
 	do {
 		pass = "";
 		flag = false;
@@ -171,27 +190,7 @@ int entry(vector<Client> Clientvector, Admin& a,string &login,string &pass) {
 			}
 		}
 		cout << endl;
-		if (!isValidPass(pass)) 
+		if (!isValidPass(pass))
 			flag = true;
 	} while (flag);
-	
-	
-	if (pass == "Exit") return 9;
-	access = authentication(login, pass, Clientvector, a);
-	return access;
 }
-int authentication(string login, string password, vector<Client>ClientVector, Admin& a) {
-	if (login == a.getLog() && password == a.getPass()) {
-		return 1;
-	}
-	else {
-		for (int i = 0; i < ClientVector.size(); i++) {
-			if (ClientVector[i].getLogin() == login && ClientVector[i].getPass() == password)
-			{
-				return 2;
-			}
-		}
-		return 3;
-	}
-}
-
