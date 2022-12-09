@@ -138,6 +138,7 @@
   <ItemGroup>
     <Text Include="admin.txt" />
     <Text Include="Clothes.txt" />
+    <Text Include="lower.txt" />
     <Text Include="report.txt" />
     <Text Include="user.txt" />
   </ItemGroup>

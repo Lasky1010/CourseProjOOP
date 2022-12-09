@@ -180,7 +180,7 @@ void User::showClothes() {
 	}
 }
 void User::findClothes() {
-	int choice;
+	char choice;
 	bool flag;
 	do {
 		flag = false;
@@ -195,8 +195,8 @@ void User::findClothes() {
 		}
 	} while (flag);
 
-	if (choice == 27) { lower.clear(); return; }
-	else if (choice == 1) {
+	if (choice == 27) {  return; }
+	else if (choice == '1') {
 		cout << "Введите бренд: ";
 		string brand;
 		bool find = false;
@@ -255,7 +255,7 @@ void User::findClothes() {
 		}
 
 	}
-	else if (choice == 4) {
+	else if (choice == '4') {
 		cout << "1.Мужская\n2.Женская\n3.Детская\nEsc.Назад";
 		int ch = _getch();
 		string art = "";
@@ -394,7 +394,7 @@ void User::filterClothes() {
 			cout << "\n---------------  Фильтр  ---------------\n\n";
 			cout << "1.По размеру и артикулу  4.По размеру и цвету\n\n";
 			cout << "2.По размеру и бренду    5.По размеру и цене\n\n";
-			cout << "3.По размеру и типу      Esc.Назад\n\n";
+			cout << "3.По размеру и типу      Esc.Назад";
 			cout << "\n\n--------------------------------------";
 			cout << "\n->";
 			key = _getch();
@@ -404,7 +404,7 @@ void User::filterClothes() {
 				flag = true;
 			}
 		} while (flag);
-		if (key == '0') {
+		if (key == 27) {
 			return;
 		}
 		do {
@@ -1159,7 +1159,7 @@ vector<Clothes> Admin::startInteraction() {
 }
 
 //            Client
-Client::Client(string log, string pass, vector<Clothes>CL) :login(log), password(pass) { ClothesVector = CL; }
+Client::Client(string log, string pass, vector<Clothes>C, vector<CL> lower) :login(log), password(pass) { ClothesVector = C; this->lower = lower; }
 Client::Client(vector<Clothes>ClothesVector) {
 	this->ClothesVector = ClothesVector;
 }
@@ -1186,8 +1186,9 @@ void Admin::saveAdminLogPass() {
 }
 string Admin::getPass() { return AdminPass; }
 string Admin::getLog() { return AdminLog; }
-Admin::Admin(vector<Clothes>ClothesVector) {
+Admin::Admin(vector<Clothes>ClothesVector,vector<CL> lower) {
 	this->ClothesVector = ClothesVector;
+	this->lower = lower;
 }
 void Admin::setList(vector<Clothes> ClothesVector) {
 	this->ClothesVector = ClothesVector;

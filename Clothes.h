@@ -6,6 +6,7 @@
 #include<vector>
 #include <windows.h>
 using namespace std;
+
 class CL {
 public:
 	string TYPE, BRAND, COLOR;
@@ -28,6 +29,7 @@ protected:
 
 	int createID();
 public:
+	
 	Clothes(string , string , string , int , string , double,int);
 	Clothes(int,string, string, string, int, string, double, int);
 	Clothes(const Clothes&);
@@ -52,5 +54,5 @@ public:
 	friend istream& operator>> (istream&, Clothes&);
 };
 
-vector<Clothes> clothesFromFile();
+vector<Clothes> clothesFromFile(vector<CL>&);
 void saveClothes(vector<Clothes>);

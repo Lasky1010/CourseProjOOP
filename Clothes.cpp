@@ -11,6 +11,7 @@
 #include<fstream>
 
 using namespace std;
+
 //               Функции
 void saveClothes(vector<Clothes> ClothesVector) {
 	ofstream of("Clothes.txt");
@@ -22,7 +23,7 @@ void saveClothes(vector<Clothes> ClothesVector) {
 	}
 	of.close();
 }
-vector<Clothes> clothesFromFile() {
+vector<Clothes> clothesFromFile(vector <CL>&lower) {
 	vector<Clothes> ClothesVector;
 	ifstream in("Clothes.txt");
 	if (in.is_open())
@@ -52,9 +53,15 @@ vector<Clothes> clothesFromFile() {
 			//in >> color;
 			in >> price;
 			in >> count;
+			CL cl;
+			cl.BRAND = brand;
+			cl.TYPE = type;
+			cl.COLOR = color;
+			lower.push_back(cl);
 			Clothes c(id,type,brand,art,size,color,price,count);
 			ClothesVector.push_back(c);
 		}
+		to_lower(lower);
 	}
 	else
 	{

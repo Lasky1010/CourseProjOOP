@@ -11,7 +11,6 @@ void centerLoadingStars();
 void Exit(vector<Clothes>, vector<Client>);
 int input();
 HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); 
-
 // Текстовый курсор в точку x,y
 void GoToXY(short x, short y)
 {
@@ -37,7 +36,8 @@ int main()
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	setlocale(LC_ALL, "Russian");
-	vector<Clothes> ClothesVector = clothesFromFile();
+	vector <CL> lower;
+	vector<Clothes> ClothesVector = clothesFromFile(lower);
 	vector<Client>ClientVector = userFromFile();
 	string entry_login, entry_password;
 	int key;
@@ -47,14 +47,14 @@ int main()
 		Exit(ClothesVector, ClientVector);
 	while (true) {
 		if (access == 1) {
-			Admin admin(ClothesVector);
+			Admin admin(ClothesVector,lower);
 			ClothesVector = admin.startInteraction();
 			access = entry(ClientVector, a, entry_login, entry_password);
 			if (access == 9)
 				Exit(ClothesVector, ClientVector);
 		}
 		else if (access == 2) {
-			Client client(entry_login, entry_password, ClothesVector);
+			Client client(entry_login, entry_password, ClothesVector,lower);
 			ClothesVector = client.startInteraction();
 			access = entry(ClientVector, a, entry_login, entry_password);
 			if (access == 9)
@@ -96,7 +96,7 @@ int main()
 				} while (flag);
 
 				enterPass(reg_pass);
-				Client c(reg_login, reg_pass, ClothesVector);
+				Client c(reg_login, reg_pass, ClothesVector,lower);
 				ClientVector.push_back(c);
 				ClothesVector = c.startInteraction();
 				access = entry(ClientVector, a, entry_login, entry_password);

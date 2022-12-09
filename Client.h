@@ -8,7 +8,7 @@
 
 class User {
 protected:
-	vector <CL> lower;
+	vector <CL>lower;
 	vector<Clothes> ClothesVector;
 	virtual vector <Clothes>startInteraction() = 0;
 	void showClothes();
@@ -36,7 +36,7 @@ private:
 
 public:
 	Client();
-	Client(string , string, vector<Clothes>);
+	Client(string , string, vector<Clothes>,vector<CL>);
 	Client(vector<Clothes>);
 	string getLogin();
 	string getPass();
@@ -67,7 +67,7 @@ private:
 	void editLogPass();
 public:
 	Admin();
-	Admin(vector<Clothes>);
+	Admin(vector<Clothes>,vector<CL>);
 	string getPass();
 	string getLog();
 	void setAdminLogPass();
