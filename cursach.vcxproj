@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="Clothes.h" />
+    <ClInclude Include="StreamTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="admin.txt" />

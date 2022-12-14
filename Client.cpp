@@ -10,18 +10,19 @@
 #include<string>
 #include<chrono>
 #include"Client.h"
+#include"StreamTable.h"
 //                  Функции
 void saveUsers(vector<Client> Clients) {
 	ofstream of("user.txt");
 	of.clear();
 	for (auto iter : Clients) {
-		of << iter.getLogin() << " " << iter.getPass() << "\n";
+		of << iter.getLogin() << " " << iter.getPass<string>() << "\n";
 	}
 	of.close();
 }
-bool checkUniq(string log, vector<Client> ClientVector, Admin& a) {
+bool checkUniq(string log, vector<Client> ClientVector, unique_ptr<Admin>& a) {
 	for (auto iter : ClientVector) {
-		if (iter.getLogin() == log || log == a.getLog()) {
+		if (iter.getLogin() == log || log == a->getLog()) {
 			return true;
 		}
 	}
@@ -151,6 +152,7 @@ vector<Client> userFromFile() {
 			in >> client;
 			if (in.eof()) break;
 			vector.push_back(client);
+			Client::count_reg_users++;
 		}
 	}
 	else
@@ -172,12 +174,25 @@ bool User::checkEmpty() {
 
 void User::showClothes() {
 
+	StreamTable st;
+	st.AddCol(4);
+	st.AddCol(10);
+	st.AddCol(10);
+	st.AddCol(8);
+	st.AddCol(7);
+	st.AddCol(8);
+	st.AddCol(8);
+	st.AddCol(7);
+	st.MakeBorderExt(true);
+	st.SetDelimRow(true, '-');
+	st.SetDelimCol(true, '|');
+	st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
 	for (auto iter : ClothesVector) {
-		cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-			"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-			<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-			"\n---------------------\n";
+		st  << iter.getID() << iter.getType() << iter.getBrand() <<
+			iter.getArt() << iter.getSize() <<
+			iter.getColor() << iter.getPrice() << iter.getCount();
 	}
+
 }
 void User::findClothes() {
 	char choice;
@@ -195,20 +210,34 @@ void User::findClothes() {
 		}
 	} while (flag);
 
-	if (choice == 27) {  return; }
-	else if (choice == '1') {
+	if (choice == 27) { return; }
+	StreamTable st;
+	st.AddCol(4);
+	st.AddCol(10);
+	st.AddCol(10);
+	st.AddCol(8);
+	st.AddCol(7);
+	st.AddCol(8);
+	st.AddCol(8);
+	st.AddCol(7);
+	st.MakeBorderExt(true);
+	st.SetDelimRow(true, '-');
+	st.SetDelimCol(true, '|');
+	
+	if (choice == '1') {
 		cout << "Введите бренд: ";
 		string brand;
 		bool find = false;
 		getline(cin, brand);
 		for (char& c : brand) c = to_lowercase(c);
+		st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
+
 		for (int i = 0; i < ClothesVector.size(); i++) {
 			if (ClothesVector[i].getBrand() == brand && lower[i].BRAND == brand) {
 				find = true;
-				cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-					"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-					<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-					"\n---------------------\n";
+				st << ClothesVector[i].getID() << ClothesVector[i].getType() << ClothesVector[i].getBrand() <<
+					ClothesVector[i].getArt() << ClothesVector[i].getSize() <<
+					ClothesVector[i].getColor() << ClothesVector[i].getPrice() << ClothesVector[i].getCount();
 			}
 		}
 		if (find == false) {
@@ -221,13 +250,14 @@ void User::findClothes() {
 		bool find = false;
 		getline(cin, type);
 		for (char& c : type) c = to_lowercase(c);
+		st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
+
 		for (int i = 0; i < ClothesVector.size(); i++) {
-			if (ClothesVector[i].getBrand() == type || lower[i].TYPE == type) {
+			if (ClothesVector[i].getType() == type && lower[i].TYPE == type) {
 				find = true;
-				cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-					"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-					<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-					"\n---------------------\n";
+				st << ClothesVector[i].getID() << ClothesVector[i].getType() << ClothesVector[i].getBrand() <<
+					ClothesVector[i].getArt() << ClothesVector[i].getSize() <<
+					ClothesVector[i].getColor() << ClothesVector[i].getPrice() << ClothesVector[i].getCount();
 			}
 		}
 
@@ -241,13 +271,14 @@ void User::findClothes() {
 		bool find = false;
 		getline(cin, color);
 		for (char& c : color) c = to_lowercase(c);
+		st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
+
 		for (int i = 0; i < ClothesVector.size(); i++) {
-			if (ClothesVector[i].getColor() == color || lower[i].COLOR == color) {
+			if (ClothesVector[i].getColor() == color && lower[i].COLOR == color) {
 				find = true;
-				cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-					"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-					<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-					"\n---------------------\n";
+				st << ClothesVector[i].getID() << ClothesVector[i].getType() << ClothesVector[i].getBrand() <<
+					ClothesVector[i].getArt() << ClothesVector[i].getSize() <<
+					ClothesVector[i].getColor() << ClothesVector[i].getPrice() << ClothesVector[i].getCount();
 			}
 		}
 		if (find == false) {
@@ -264,12 +295,12 @@ void User::findClothes() {
 		else if (ch == '2') { art = "Ж"; }
 		else if (ch == '3') { art = "Д"; }
 		bool find = false;
+		st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
 		for (auto iter : ClothesVector)
 			if (iter.getArt() == art) {
-				cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-					"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-					<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-					"\n---------------------\n";
+				st <<  iter.getID() << iter.getType() << iter.getBrand() <<
+					 iter.getArt() <<iter.getSize() 
+					<< iter.getColor()  << iter.getPrice() << iter.getCount();
 				find = true;
 			}
 		if (find == false) {
@@ -281,12 +312,12 @@ void User::findClothes() {
 		bool find = false;
 		int size = input();
 		cin.ignore();
+		st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
 		for (auto iter : ClothesVector)
 			if (iter.getSize() == size) {
-				cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-					"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-					<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-					"\n---------------------\n";
+				st << iter.getID() << iter.getType() << iter.getBrand() <<
+					iter.getArt() << iter.getSize()
+					<< iter.getColor() << iter.getPrice() << iter.getCount();
 				find = true;
 			}
 		if (find == false) {
@@ -317,13 +348,15 @@ void User::sortClothes() {
 		int c = _getch();
 		if (c == '9') {}
 		else if (c == '1') {
-			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
+			sort(ClothesVector.begin(), ClothesVector.end(),
+				[](Clothes& c1, Clothes& c2)
 				{
 					return c1.getType() < c1.getType();
 				});
 		}
 		else if (c == '2') {
-			sort(ClothesVector.begin(), ClothesVector.end(), [](Clothes& c1, Clothes& c2)
+			sort(ClothesVector.begin(), ClothesVector.end(),
+				[](Clothes& c1, Clothes& c2)
 				{
 					return c1.getType() > c2.getType();
 				});
@@ -407,6 +440,18 @@ void User::filterClothes() {
 		if (key == 27) {
 			return;
 		}
+		StreamTable st;
+		st.AddCol(4);
+		st.AddCol(10);
+		st.AddCol(10);
+		st.AddCol(8);
+		st.AddCol(7);
+		st.AddCol(8);
+		st.AddCol(8);
+		st.AddCol(7);
+		st.MakeBorderExt(true);
+		st.SetDelimRow(true, '-');
+		st.SetDelimCol(true, '|');
 		do {
 			cout << "Введите желаемый размер: ";
 			size = input();
@@ -431,12 +476,12 @@ void User::filterClothes() {
 			} while (ch != '1' && ch != '2' && ch != '3' && ch != '0');
 			bool find = false;
 
+			st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
 			for (auto iter : ClothesVector)
-				if (iter.getSize() == size && iter.getArt() == art) {
-					cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-						"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-						<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-						"\n---------------------\n";
+				if (iter.getSize() == size && iter.getArt()==art) {
+					st << iter.getID() << iter.getType() << iter.getBrand() <<
+						iter.getArt() << iter.getSize()
+						<< iter.getColor() << iter.getPrice() << iter.getCount();
 					find = true;
 				}
 			if (find == false) {
@@ -459,13 +504,14 @@ void User::filterClothes() {
 			bool find = false;
 
 			for (char& c : brand) c = to_lowercase(c);
+			st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
+
 			for (int i = 0; i < ClothesVector.size(); i++) {
-				if (ClothesVector[i].getBrand() == brand && lower[i].BRAND == brand) {
+				if (ClothesVector[i].getSize() && ClothesVector[i].getBrand() == brand && lower[i].BRAND == brand) {
 					find = true;
-					cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-						"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-						<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-						"\n---------------------\n";
+					st << ClothesVector[i].getID() << ClothesVector[i].getType() << ClothesVector[i].getBrand() <<
+						ClothesVector[i].getArt() << ClothesVector[i].getSize() <<
+						ClothesVector[i].getColor() << ClothesVector[i].getPrice() << ClothesVector[i].getCount();
 				}
 			}
 			if (find == false) {
@@ -486,13 +532,14 @@ void User::filterClothes() {
 			bool find = false;
 
 			for (char& c : type) c = to_lowercase(c);
+			st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
+
 			for (int i = 0; i < ClothesVector.size(); i++) {
-				if (ClothesVector[i].getType() == type && lower[i].TYPE == type) {
+				if (ClothesVector[i].getSize() && ClothesVector[i].getType() == type && lower[i].TYPE == type) {
 					find = true;
-					cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-						"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-						<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-						"\n---------------------\n";
+					st << ClothesVector[i].getID() << ClothesVector[i].getType() << ClothesVector[i].getBrand() <<
+						ClothesVector[i].getArt() << ClothesVector[i].getSize() <<
+						ClothesVector[i].getColor() << ClothesVector[i].getPrice() << ClothesVector[i].getCount();
 				}
 			}
 			if (find == false) {
@@ -513,13 +560,14 @@ void User::filterClothes() {
 			bool find = false;
 
 			for (char& c : color) c = to_lowercase(c);
+			st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
+
 			for (int i = 0; i < ClothesVector.size(); i++) {
-				if (ClothesVector[i].getBrand() == color && lower[i].COLOR == color) {
+				if (ClothesVector[i].getSize() && ClothesVector[i].getColor() == color && lower[i].COLOR == color) {
 					find = true;
-					cout << "№" << ClothesVector[i].getID() << "\nТип: " << ClothesVector[i].getType() << "\nБренд: " << ClothesVector[i].getBrand() <<
-						"\nАртикул: " << ClothesVector[i].getArt() << "\nРазмер: " << ClothesVector[i].getSize() << "\nЦвет: "
-						<< ClothesVector[i].getColor() << "\nЦена: " << ClothesVector[i].getPrice() << "$\nКоличество: " << ClothesVector[i].getCount() <<
-						"\n---------------------\n";
+					st << ClothesVector[i].getID() << ClothesVector[i].getType() << ClothesVector[i].getBrand() <<
+						ClothesVector[i].getArt() << ClothesVector[i].getSize() <<
+						ClothesVector[i].getColor() << ClothesVector[i].getPrice() << ClothesVector[i].getCount();
 				}
 			}
 			if (find == false) {
@@ -549,15 +597,15 @@ void User::filterClothes() {
 				}
 			} while (flag);
 			bool find = false;
-
+			st << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
 			for (auto iter : ClothesVector)
 				if (iter.getSize() == size && (MIN <= iter.getPrice() <= MAX)) {
-					cout << "№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-						"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-						<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-						"\n---------------------\n";
+					st << iter.getID() << iter.getType() << iter.getBrand() <<
+						iter.getArt() << iter.getSize()
+						<< iter.getColor() << iter.getPrice() << iter.getCount();
 					find = true;
 				}
+			
 			if (find == false) {
 				cout << "Не найдено\n";
 			}
@@ -601,19 +649,19 @@ void User::editClothes() {
 		});
 	if (key == '1') {
 		string type;
-		 do {
-			 cout << "Введите тип: ";
-			 getline(cin, type); 
-		 } while (!isValidString(type));
-		if(EDIT()){ 
-			(*curr).setType(type); 
+		do {
+			cout << "Введите тип: ";
+			getline(cin, type);
+		} while (!isValidString(type));
+		if (EDIT()) {
+			(*curr).setType(type);
 		}
 		else {
 			cout << "Операция отменена\n";
 		}
-		
+
 	}
-	else if(key=='2'){
+	else if (key == '2') {
 		string brand;
 		do {
 			cout << "Введите бренд: ";
@@ -628,8 +676,8 @@ void User::editClothes() {
 	}
 	else if (key == '3') {
 		string art;
-		 do {
-			 cout << "Введите артикул : ";
+		do {
+			cout << "Введите артикул : ";
 			getline(cin, art);
 			if (!isValidString(art)) {
 				cout << "Введите что-нибудь\n";
@@ -647,7 +695,7 @@ void User::editClothes() {
 			cout << "Операция отменена\n";
 		}
 	}
-	else if (key == '4') { 
+	else if (key == '4') {
 		string color;
 		do {
 			cout << "Введите цвет: ";
@@ -662,7 +710,7 @@ void User::editClothes() {
 	}
 	else if (key == '5') {
 		double price;
-		 do {
+		do {
 			cout << "Введите цену: ";
 			price = dinput();
 			cin.ignore();
@@ -680,7 +728,7 @@ void User::editClothes() {
 	}
 	else if (key == '6') {
 		int size;
-		 do {
+		do {
 			cout << "введите размер: ";
 			size = input();
 			cin.ignore();
@@ -789,7 +837,7 @@ void Admin::deleteClothes() {
 	else {
 		cout << "Операция отменена\n";
 	}
-	
+
 
 }
 bool User::isID(int id) {
@@ -818,7 +866,7 @@ void Client::addCart() {
 		return c.getID() == id;
 		});
 	int kol;
-	
+
 	do {
 		flag = false;
 		cout << "Сколько единиц хотите добавить в корзину ?\n->";
@@ -844,11 +892,16 @@ bool Client::checkCart() {
 void Client::menuCart() {
 	char key;
 	bool flag;
+	bool c = true;
 	while (true) {
 		do {
 			flag = false;
-			for (auto x : cart)
-				priceCart += x.getPrice() * x.getCount();
+			if (c) {
+				for (auto x : cart)
+					priceCart += x.getPrice() * x.getCount();
+				c = false;
+			}
+
 			cout << "Корзина: " << priceCart << "$";
 			cout << "\n------------  Меню  ------------\n\n";
 			cout << "1.Просмотреть    3.Удалить\n\n";
@@ -864,31 +917,46 @@ void Client::menuCart() {
 		} while (flag);
 		if (key == 27)
 			return;
-		
+
 		if (key == '1') {
 			if (!checkCart())
 				showCart();
 		}
-			
-		else if (key == '2'){ 
+
+		else if (key == '2') {
 			if (!checkCart())
 				buy();
 		}
-			
+
 		else if (key == '3') {
 			if (!checkCart())
 				deleteCart();
+			//c = false;
 		}
 	}
 }
 void Client::showCart() {
+	StreamTable st;
+	st.AddCol(4);
+	st.AddCol(4);
+	st.AddCol(10);
+	st.AddCol(10);
+	st.AddCol(8);
+	st.AddCol(7);
+	st.AddCol(8);
+	st.AddCol(8);
+	st.AddCol(7);
+	st.MakeBorderExt(true);
+	st.SetDelimRow(true, '-');
+	st.SetDelimCol(true, '|');
+	st << "#" << "ID" << "Тип" << "Бренд" << "Артикул" << "Размер" << "Цвет" << "Цена, $" << "Кол-во";
 	int i = 1;
 	for (auto iter : cart) {
-		cout <<"#" <<i++<< "\n№" << iter.getID() << "\nТип: " << iter.getType() << "\nБренд: " << iter.getBrand() <<
-			"\nАртикул: " << iter.getArt() << "\nРазмер: " << iter.getSize() << "\nЦвет: "
-			<< iter.getColor() << "\nЦена: " << iter.getPrice() << "$\nКоличество: " << iter.getCount() <<
-			"\n---------------------\n";
+		st << i++ << iter.getID() << iter.getType() << iter.getBrand() <<
+			iter.getArt() << iter.getSize() <<
+			iter.getColor() << iter.getPrice() << iter.getCount();
 	}
+
 }
 void Client::deleteCart() {
 	int n;
@@ -903,27 +971,28 @@ void Client::deleteCart() {
 			cout << "Такой позиции нет, попробуйте ещё раз\n";
 		}
 	} while (flag);
-	auto curr = cart.begin() + n-1;
+	auto curr = cart.begin() + n - 1;
 	if (DEL())
 	{
-		cart.erase(curr);
 		priceCart -= (*curr).getPrice() * (*curr).getCount();
+		cart.erase(curr);
+
 	}
 	else {
 		cout << "Операция отменена\n";
 	}
-	
+
 }
 void Client::writeReport2(time_t end_time, string card4) {
 	ofstream file("report.txt", ios::app);
 
-	file << "Оплачено: " + to_string(priceCart)+"\n"
+	file << "Оплачено: " + to_string(priceCart) + "$\n"
 		+ card4 + "\n"
-		+ ctime(&end_time) ;
+		+ ctime(&end_time);
 	file.close();
 }
 void Client::writeReport(Clothes cart) {
-	ofstream file("report.txt",ios::app);
+	ofstream file("report.txt", ios::app);
 	file << "ID: " + to_string(cart.getID()) + "; "
 		+ cart.getBrand() + "; "
 		+ cart.getType() + "; "
@@ -939,15 +1008,15 @@ void Client::buy() {
 	auto now = std::chrono::system_clock::now();
 	std::time_t end_time = std::chrono::system_clock::to_time_t(now);
 	if (BUY()) {
-		ofstream file; 
+		ofstream file;
 		file.open("report.txt", ios::app);
 		string card4 = "**** **** **** ";
 		for (int i = 12; i < 16; i++)
 		{
 			card4 += card.cardNumber[i];
 		}
-		
-		for (int j = 0, i = 0; j < cartsize;){
+
+		for (int j = 0, i = 0; j < cartsize;) {
 			if (cart[j].getID() == ClothesVector[i].getID()) {
 				ClothesVector[i].setCount(ClothesVector[i].getCount() - cart[j].getCount());
 				writeReport(cart[j]);
@@ -958,10 +1027,10 @@ void Client::buy() {
 				i++;
 			}
 		}
-		
+
 		writeReport2(end_time, card4);
 		file << "Покупатель: " << login << "\n\n";
-		printBill(end_time,card4);
+		printBill(end_time, card4);
 		priceCart = 0;
 		cart.clear();
 		file.close();
@@ -969,21 +1038,21 @@ void Client::buy() {
 	}
 	else return;
 }
-void Client::printBill(time_t end_time,string card4) {
+void Client::printBill(time_t end_time, string card4) {
 
 	ofstream file("bill.txt");
-	string bill ="***************************\n"
-	        	"*                         *\n"
-	        	"* ООО \"Курсовой проект\"   *\n"
-	        	"*     ул.Платонова, 39    *\n"
-	        	"*                         *\n"
-	        	"***************************\n"
-	        	"                             \n"
-	        	"      Оплата: онлайн        \n"
-	        	"    Безналичный расчёт      \n"
-	        	"           "+to_string(priceCart)+"$\n"
-	        	"  " + ctime(&end_time) +"      \n"
-	        	+"    "+card4 + "\n";
+	string bill = "***************************\n"
+		"*                         *\n"
+		"* ООО \"Курсовой проект\"   *\n"
+		"*     ул.Платонова, 39    *\n"
+		"*                         *\n"
+		"***************************\n"
+		"                             \n"
+		"      Оплата: онлайн        \n"
+		"    Безналичный расчёт      \n"
+		"           " + to_string(priceCart) + "$\n"
+		"  " + ctime(&end_time) + "      \n"
+		+ "    " + card4 + "\n";
 
 	file << bill;
 	cout << bill;
@@ -991,7 +1060,7 @@ void Client::printBill(time_t end_time,string card4) {
 }
 void Client::enterCard() {
 	bool flag;
-	
+
 	do {
 		cout << "Введите номер карты: ";
 		flag = false;
@@ -1004,7 +1073,7 @@ void Client::enterCard() {
 	} while (flag);
 
 	cout << "Введите месяц и год окончания действительности карты\n";
-	do { 
+	do {
 		flag = false;
 		cout << "Месяц: "; card.month = input();
 		cin.ignore();
@@ -1018,13 +1087,13 @@ void Client::enterCard() {
 		cout << "Год: "; card.year = input();
 		cin.ignore();
 		if (card.year < 2023) {
-			cout <<"Карта просрочена, попробуйте ещё раз\n";
+			cout << "Карта просрочена, попробуйте ещё раз\n";
 			flag = true;
 		}
 		if (card.year > 2030) {
 			cout << "Таких карт нет, попробуйте ещё раз\n";
 			flag = true;
-		}	
+		}
 	} while (flag);
 
 	do {
@@ -1059,7 +1128,7 @@ vector<Clothes> Client::startInteraction() {
 				flag = true;
 			}
 		} while (flag);
-		if (key == 27) 
+		if (key == 27)
 			return ClothesVector;
 		else if (key == '1') {
 			if (!checkEmpty()) {
@@ -1076,24 +1145,24 @@ vector<Clothes> Client::startInteraction() {
 			if (!checkEmpty())
 				filterClothes();
 		}
-			
+
 		else if (key == '4') {
 			if (!checkEmpty())
 				sortClothes();
 		}
-			
+
 		else if (key == '5') {
 			if (!checkEmpty()) {
 				showClothes();
 				addCart();
 			}
 		}
-			
+
 		else if (key == '6') {
 			if (!checkCart())
 				menuCart();
 		}
-			
+
 
 	}
 
@@ -1118,7 +1187,7 @@ vector<Clothes> Admin::startInteraction() {
 				flag = true;
 			}
 		} while (flag);
-		if (key == '0') {
+		if (key == 27) {
 			return ClothesVector;
 		}
 		else if (key == '1') {
@@ -1134,7 +1203,7 @@ vector<Clothes> Admin::startInteraction() {
 				findClothes();
 			}
 		}
-		else if (key == '4'){
+		else if (key == '4') {
 			if (!checkEmpty()) {
 				showClothes();
 				editClothes();
@@ -1153,7 +1222,7 @@ vector<Clothes> Admin::startInteraction() {
 		}
 		else if (key == '7') {
 			editLogPass();
-			saveAdminLogPass();
+
 		}
 	}
 }
@@ -1168,14 +1237,17 @@ Client::Client() {
 	password = "";
 }
 string Client::getLogin() { return login; }
+template <typename T>
 string Client::getPass() { return password; }
-
-
+int Client::count_reg_users = 0;
+int Client::getRegUsers() {
+	return count_reg_users;
+}
 //           Admin
-void Admin::setAdminLogPass() {
+void setAdminLogPass(unique_ptr<Admin>&a) {
 	fstream adm("admin.txt", ios::in);
-	getline(adm, AdminLog);
-	getline(adm, AdminPass);
+	getline(adm, a->AdminLog);
+	getline(adm, a->AdminPass);
 }
 
 void Admin::saveAdminLogPass() {
@@ -1186,7 +1258,11 @@ void Admin::saveAdminLogPass() {
 }
 string Admin::getPass() { return AdminPass; }
 string Admin::getLog() { return AdminLog; }
-Admin::Admin(vector<Clothes>ClothesVector,vector<CL> lower) {
+void Admin::setVectors(vector<Clothes> C, vector <CL> lower) {
+	this->ClothesVector = C;
+	this->lower = lower;
+}
+Admin::Admin(vector<Clothes>ClothesVector, vector<CL> lower) {
 	this->ClothesVector = ClothesVector;
 	this->lower = lower;
 }
@@ -1223,9 +1299,12 @@ void Admin::editLogPass() {
 			cout << "Такого пункта меню нет\n";
 		}
 		system("cls");
-	} while (key > 3);
-	bool flag = true;;
-	if (key == 1) {
+	} while (key != '1' && key != '2' && key != '3' && key != 27);
+	bool flag = true;
+	if (key == 27) {
+		return;
+	}
+	if (key == '1') {
 		cout << "Введите";
 		do {
 			flag = true;
@@ -1244,31 +1323,30 @@ void Admin::editLogPass() {
 
 
 	}
-	else if (key == 2) {
+	else if (key == '2') {
 		do {
 			flag = true;
-			cout << "\nЛогин: ";
+			cout << "Введите новый логин: ";
 			getline(cin, AdminLog);
 			if (!isValidLogin(AdminLog))
 				flag = false;
 		} while (!flag);
 	}
-	else if (key == 3) {
+	else if (key == '3') {
 		do {
 			flag = true;
-			cout << "\nПароль: ";
+			cout << "Введите новый пароль: ";
 			getline(cin, AdminPass);
 			if (!isValidPass(AdminPass))
 				flag = false;
 		} while (!flag);
 
 	}
-	else if (key == 0) {
-		return;
-	}
+	saveAdminLogPass();
+	cout << "Успешно отредактировано\n";
 }
 
-// Перегрзки
+// Перегрузки
 ostream& operator << (ostream& os, Client& c)
 {
 	return os << c.login << " " << c.password << endl;

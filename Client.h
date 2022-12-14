@@ -24,21 +24,26 @@ protected:
 
 class Client : public User {
 private:
+	template<typename T>
 	class Card {
 	public:
-		string cardNumber;
+		T cardNumber;
 		int month, year, cvv;
+		
 	};
-	Card card;
+	Card<string> card;
 	string login, password;
 	vector<Clothes> cart;
 	double priceCart = 0;
 
 public:
+	static int count_reg_users;
+	static int getRegUsers();
 	Client();
 	Client(string , string, vector<Clothes>,vector<CL>);
 	Client(vector<Clothes>);
 	string getLogin();
+	template <typename T>
 	string getPass();
 	void menuCart();
 	void addCart();
@@ -67,14 +72,14 @@ private:
 	void editLogPass();
 public:
 	Admin();
+	void setVectors(vector<Clothes>,vector<CL>);
 	Admin(vector<Clothes>,vector<CL>);
 	string getPass();
 	string getLog();
-	void setAdminLogPass();
+	friend void setAdminLogPass(unique_ptr<Admin>&);
 	void setList(vector<Clothes> );
 	bool isDataCorrect(string, string);
 	vector <Clothes>startInteraction();
-	
 	
 };
 
@@ -82,7 +87,7 @@ public:
 
 vector <Client>userFromFile();
 void saveUsers(vector<Client>);
-bool checkUniq(string , vector<Client>,Admin& );
+bool checkUniq(string , vector<Client>,unique_ptr<Admin>& );
 bool isValidString(string);
 bool isValidLogin(string);
 bool isValidPass(string);
